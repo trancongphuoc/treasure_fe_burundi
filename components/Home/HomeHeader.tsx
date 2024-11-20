@@ -10,6 +10,7 @@ import { format } from "date-fns";
 import { ImageBase } from "../Images";
 import useTrans from "../../lang/useTrans";
 import { StorageKey } from "../../constants";
+import { log } from "console";
 
 interface IHomeHeaderProps {
   totalStar?: number;
@@ -64,6 +65,19 @@ const HomeHeader: React.FC<IHomeHeaderProps> = (props) => {
       setIsOpenModalHistory(!isOpenModalHistory);
   };
 
+  const logout = () => {
+    localStorage.removeItem(StorageKey.accessToken); 
+    // Xóa tất cả cookie
+    document.cookie.split(";").forEach(cookie => {
+      const eqPos = cookie.indexOf("=");
+      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
+    });
+
+    window.location.reload()
+
+  }
+
   return (
     <>
       <Box
@@ -78,7 +92,7 @@ const HomeHeader: React.FC<IHomeHeaderProps> = (props) => {
             sx={{
               ".MuiButton-startIcon": { marginRight: "4px" },
             }}
-            onClick={() => {localStorage.removeItem(StorageKey.accessToken); window.location.reload()}}
+            onClick={logout}
             startIcon={<XMarkIcon />}
           >
             {trans.Logout}
