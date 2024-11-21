@@ -9,7 +9,7 @@ import ModalOtp from "../components/Modal/ModalOtp";
 import ModalSuccess from "../components/Modal/ModalSuccess";
 import { ImageBase } from "../components/Images";
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import ModalCancelActive from "../components/Modal/ModalCancelActive";
 import { useRouter } from "next/router";
 import { AuthService, MpsService, PlayService, UserInfoResponse } from "../services/service";
@@ -68,17 +68,24 @@ const Home: NextPage = () => {
     setStatusShake(status);
   };
 
+  
+  const videoRef = useRef<any>(null);
+  const audioRef = useRef<any>(null);
+  
   useEffect(() => {
     // const shakeService = new ShakeDetectorService();
     // shakeService.initialize();
-    // shakeService.onShake(() => {
-    //   alert("Shake");
-    //   if(statusShake === TStatusShake.inProgress) {
-    //     return;
-    //   }
-    //   // alert("The chest is now open! 🎉");
-    //   openChest(userInfo);
-    // });
+    ShakeDetectorService.onShake(() => {
+      alert("Shake");
+      if(statusShake === TStatusShake.inProgress) {
+        return;
+      }
+      // alert("The chest is now open! 🎉");
+      if (audioRef && audioRef?.current) {
+        audioRef.current.load();
+        openChest(userInfo);
+      }
+    });
     if (router.isReady) {
       if (router.query?.token) {
         axios.post('api/auth/verify_natcom', { token: router.query?.token }, {
@@ -262,6 +269,7 @@ const Home: NextPage = () => {
   };
 
   const onSubmitOtp = (data: any) => {
+    ShakeDetectorService.initialize();
     setOpenOtp(false);
     setOtpType(null);
     switch (data?.type) {
@@ -286,7 +294,6 @@ const Home: NextPage = () => {
             };
             serviceOptions.axios = axios.create(axiosConfig);
             setRefreshUserInfo(true)
-            ShakeDetectorService.initialize();
             window.location.reload()
           } else {
             setOtpType(data?.type);

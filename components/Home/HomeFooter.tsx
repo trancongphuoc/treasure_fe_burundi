@@ -18,7 +18,7 @@ interface IHomeFooterProps {
   handleRegister: (data?: any) => void;
   handleCancel: (data?: any) => void;
   userInfo?: UserInfoResponse;
-  muteAudioBackground?: boolean
+  muteAudioBackground?: boolean;
 }
 
 const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
@@ -55,29 +55,29 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
     }
   }, [openChest]);
 
-  let isShakeInitialized = false; // Biến cờ bên ngoài
+  // let isShakeInitialized = false; // Biến cờ bên ngoài
 
-  useEffect(() => {
-    if(!isShakeInitialized) {
-      alert("on Shake")
-      isShakeInitialized = true;
-      ShakeDetectorService.onShake(() => {
-        if(statusShake === TStatusShake.inProgress) {
-          return;
-        }
-        // alert("The chest is now open! 🎉");
-        // openChest(userInfo);
-        if (!quantityTurn || quantityTurn < 1) {
-          openChest({ totalTurn: 0 })
-          return
-        }
-        if (audioRef && audioRef?.current) {
-          audioRef.current.load();
-          openChest && openChest();
-        }
-      });
-    }
-  })
+  // useEffect(() => {
+  //   if(!isShakeInitialized) {
+  //     alert("on Shake")
+  //     isShakeInitialized = true;
+  //     ShakeDetectorService.onShake(() => {
+  //       if(statusShake === TStatusShake.inProgress) {
+  //         return;
+  //       }
+  //       // alert("The chest is now open! 🎉");
+  //       // openChest(userInfo);
+  //       if (!quantityTurn || quantityTurn < 1) {
+  //         openChest({ totalTurn: 0 })
+  //         return
+  //       }
+  //       if (audioRef && audioRef?.current) {
+  //         audioRef.current.load();
+  //         openChest && openChest();
+  //       }
+  //     });
+  //   }
+  // })
 
   useEffect(() => {
     if (videoRef && videoRef?.current) {
