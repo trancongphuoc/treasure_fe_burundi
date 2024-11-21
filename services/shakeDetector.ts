@@ -12,13 +12,13 @@ export class ShakeDetectorService {
   
     // Khởi tạo Shake.js
     private initializeShake() {
-      alert("init shake")
       this.shake = new Shake({ threshold: this.threshold });
       this.shake.start();
     }
   
     // Gắn sự kiện khi lắc
     public onShake(listener: () => void) {
+      this.initializeShake();
       this.eventListener = listener;
       window.addEventListener("shake", this.eventListener);
     }

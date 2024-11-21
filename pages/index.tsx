@@ -74,10 +74,7 @@ const Home: NextPage = () => {
   const audioRef = useRef<any>(null);
   
   useEffect(() => {
-    // shakeService.initialize();
-    alert("on Shake");
     shakeService.onShake(() => {
-      alert("Shake");
       if(statusShake === TStatusShake.inProgress) {
         return;
       }
