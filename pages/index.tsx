@@ -16,6 +16,7 @@ import { AuthService, MpsService, PlayService, UserInfoResponse } from "../servi
 import { OtpType, StorageKey, TStatusShake } from "../constants";
 import axios, { AxiosRequestConfig } from "axios";
 import { serviceOptions } from "../services/serviceOptions";
+import { ShakeDetectorService } from "../services/shakeDetector";
 import { getImageSuccessModal } from "../utils";
 import ModalPhoneNumber from "../components/Modal/ModalPhoneNumber";
 import useTrans from "../lang/useTrans";
@@ -65,6 +66,15 @@ const Home: NextPage = () => {
   };
 
   useEffect(() => {
+    const shakeService = new ShakeDetectorService();
+    shakeService.initialize();
+    shakeService.onShake(() => {
+      if(statusShake === TStatusShake.inProgress) {
+        return;
+      }
+      // alert("The chest is now open! 🎉");
+      openChest(userInfo);
+    });
     if (router.isReady) {
       if (router.query?.token) {
         axios.post('api/auth/verify_natcom', { token: router.query?.token }, {
@@ -171,6 +181,11 @@ const Home: NextPage = () => {
       setIsModalCharge(true)
       return
     }
+
+    if(statusShake === TStatusShake.inProgress) {
+      return;
+    }
+
     setStatusShake(TStatusShake.inProgress);
     setIsModalShakeSuccess(false)
     setIsChargeTurn(false)

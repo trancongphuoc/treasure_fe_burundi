@@ -86,6 +86,24 @@ export class AuthService {
       axios(configs, resolve, reject);
     });
   }
+
+  /**
+   * logout
+   */
+  static logout(): Promise<AuthVerifyOtpResponse> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + api.logout;
+
+      const configs: IRequestConfig = getConfigs(
+        "get",
+        "application/json",
+        url,
+        {}
+      );
+      axios(configs, resolve, reject);
+    });
+  }
+
   /**
    * user info
    */

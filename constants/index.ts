@@ -4,6 +4,7 @@ export const api = {
   send_otp: "api/auth/send_otp",
   verify_otp: "api/auth/verify_otp",
   verify_natcom: "api/auth/verify_natcom",
+  logout: "api/logout",
   user_info: "api/user/info",
   admin_increment_play: "api/admin/increment_play",
   admin_get_otp: "api/admin/get_otp",
@@ -24,7 +25,8 @@ export const OtpType = {
 };
 export const StorageKey = {
   accessToken: "accessToken",
-  userInfo: "userInfo"
+  userInfo: "userInfo",
+  motionPermission: "motionPermission"
 };
 export const TStatusShake = {
   inProgress: "inProgress",

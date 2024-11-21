@@ -4,7 +4,7 @@ import ModalInfo from "../Modal/ModalInfo";
 import ModalHistory from "../Modal/ModalHistory";
 import { AboutIcon, InfoIcon, XMarkIcon, VolumeUp, VolumeOff } from "../Icons";
 import React, { useCallback, useState } from "react";
-import { PlayService } from "../../services/service";
+import { PlayService, AuthService } from "../../services/service";
 import { getImageSuccessModal } from "../../utils";
 import { format } from "date-fns";
 import { ImageBase } from "../Images";
@@ -66,16 +66,9 @@ const HomeHeader: React.FC<IHomeHeaderProps> = (props) => {
   };
 
   const logout = () => {
-    localStorage.removeItem(StorageKey.accessToken); 
-    // Xóa tất cả cookie
-    document.cookie.split(";").forEach(cookie => {
-      const eqPos = cookie.indexOf("=");
-      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
-    });
-
-    window.location.reload()
-
+    localStorage.removeItem(StorageKey.accessToken);
+    AuthService.logout();
+    window.location.reload();
   }
 
   return (
