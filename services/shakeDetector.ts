@@ -32,16 +32,9 @@ export class ShakeDetectorService {
   
     // Yêu cầu quyền cảm biến chuyển động (chỉ dành cho iOS)
     public async requestMotionPermission(): Promise<boolean> {
-      alert("requestMotionPermission")
-      const ios =
-        typeof DeviceMotionEvent !== "undefined" &&
-        typeof (DeviceMotionEvent as any).requestPermission === "function";
-  
-      if (ios) {
-        try {
-          const response = await (DeviceMotionEvent as any).requestPermission();
+      try {
+        const response = await (DeviceMotionEvent as any).requestPermission();
           alert("res: "  + response)
-
           if (response === "granted") {
             localStorage.setItem("motionPermission", "granted");
             this.initializeShake();
@@ -51,15 +44,10 @@ export class ShakeDetectorService {
             alert("Permission denied. Motion detection will not work.");
             return false;
           }
-        } catch (error) {
-          alert("res: "  + error)
-          console.error("Error requesting motion permission:", error);
-          return false;
-        }
-      } else {
-        // Android hoặc không cần xin quyền
-        this.initializeShake();
-        return true;
+      } catch (error) {
+        alert("res: "  + error)
+        console.error("Error requesting motion permission:", error);
+        return false;
       }
     }
   
@@ -73,7 +61,12 @@ export class ShakeDetectorService {
       if (motionPermission === "granted") {
         this.initializeShake();
       } else if (ios) {
-        await this.requestMotionPermission();
+        const userPrompt = confirm(
+          "This app needs motion detection permission to work. Do you want to enable it?"
+        );
+        if (userPrompt) {
+          await this.requestMotionPermission();
+        }
       } else {
         this.initializeShake();
       }
