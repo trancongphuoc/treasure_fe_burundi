@@ -286,6 +286,7 @@ const Home: NextPage = () => {
             };
             serviceOptions.axios = axios.create(axiosConfig);
             setRefreshUserInfo(true)
+            ShakeDetectorService.initialize();
             window.location.reload()
           } else {
             setOtpType(data?.type);
