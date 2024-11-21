@@ -64,10 +64,8 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
 
   useEffect(() => {
     if(!isOnShake) {
-      alert("on Shake")
       setIsOnShake(true);
       ShakeDetectorService.onShake(() => {
-        alert("shake")
         if(statusShake === TStatusShake.inProgress) {
           return;
         }
