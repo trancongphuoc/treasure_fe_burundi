@@ -82,8 +82,9 @@ const Home: NextPage = () => {
       // alert("The chest is now open! 🎉");
       if (audioRef && audioRef?.current) {
         audioRef.current.load();
-        openChest(userInfo);
       }
+
+      openChest(userInfo);
     });
     if (router.isReady) {
       if (router.query?.token) {
