@@ -67,15 +67,16 @@ const Home: NextPage = () => {
   const handleStatusShake = (status: TStatusShake) => {
     setStatusShake(status);
   };
+  const shakeService = new ShakeDetectorService();
 
   
   const videoRef = useRef<any>(null);
   const audioRef = useRef<any>(null);
   
   useEffect(() => {
-    // const shakeService = new ShakeDetectorService();
     // shakeService.initialize();
-    ShakeDetectorService.onShake(() => {
+    alert("on Shake");
+    shakeService.onShake(() => {
       alert("Shake");
       if(statusShake === TStatusShake.inProgress) {
         return;
@@ -269,7 +270,7 @@ const Home: NextPage = () => {
   };
 
   const onSubmitOtp = (data: any) => {
-    ShakeDetectorService.initialize();
+    shakeService.initialize();
     setOpenOtp(false);
     setOtpType(null);
     switch (data?.type) {
