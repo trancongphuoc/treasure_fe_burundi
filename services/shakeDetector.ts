@@ -18,7 +18,8 @@ export class ShakeDetectorService {
   
     // Gắn sự kiện khi lắc
     public onShake(listener: () => void) {
-      this.initializeShake();
+      this.shake = new Shake({ threshold: this.threshold });
+      this.shake.start();
       this.eventListener = listener;
       window.addEventListener("shake", this.eventListener);
     }

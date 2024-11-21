@@ -75,6 +75,7 @@ const Home: NextPage = () => {
   
   useEffect(() => {
     shakeService.onShake(() => {
+      alert("shake")
       if(statusShake === TStatusShake.inProgress) {
         return;
       }
