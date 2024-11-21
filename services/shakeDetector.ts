@@ -1,3 +1,5 @@
+import Shake from 'shake.js';
+
 export class ShakeDetectorService {
     private shake: any; // Biến để lưu instance của Shake.js
     private threshold: number;
@@ -10,7 +12,7 @@ export class ShakeDetectorService {
   
     // Khởi tạo Shake.js
     private initializeShake() {
-      const Shake = require("shake.js");
+      alert("init shake")
       this.shake = new Shake({ threshold: this.threshold });
       this.shake.start();
     }

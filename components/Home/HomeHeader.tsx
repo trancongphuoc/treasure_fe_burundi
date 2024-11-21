@@ -88,7 +88,7 @@ const HomeHeader: React.FC<IHomeHeaderProps> = (props) => {
             onClick={logout}
             startIcon={<XMarkIcon />}
           >
-            {trans.Logout}
+            {/* {trans.Logout} */}
           </NormalButton>
           <NormalButton
             sx={{ minWidth: "88px", px: "8px" }}
