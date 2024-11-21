@@ -83,7 +83,7 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
         }
       });
     }
-  })
+  }, [isOnShake, statusShake, openChest, audioRef]);
 
   useEffect(() => {
     if (videoRef && videoRef?.current) {
