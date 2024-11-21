@@ -29,6 +29,7 @@ export default {
     "Buy more": "Kugura izindi",
     "Buy more successful": "Mwaguze neza izindi ncuro",
     "You have 5 turns. Play the game now!": "Murafise incuro 5. Nimukine urukino ubu!",
+    "Play the game now!": "Nimukine urukino ubu!",
     "Play Now": "Nimukine ubu",
     "Not Enough Money": "Ubutunzi bwanyu ntibukwiye",
     "Top up to buy more": "Nimwongereze ubutunzi kugira mugure izindi ncuro",
@@ -45,5 +46,7 @@ export default {
     "History": "Ivyakozwe",
     "Share": "Musangize",
     "Cancel": "Gukuramwo",
-    "Guide": "Gufasha"
+    "Guide": "Gufasha",
+    "Fee": "Igiciro",
+    "Cancel Successful": "Guhagarika vyagenze neza."
 }

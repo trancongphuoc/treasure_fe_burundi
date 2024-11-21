@@ -55,7 +55,10 @@ const Home: NextPage = () => {
   const [refreshUserInfo, setRefreshUserInfo] = useState<boolean>(false);
 
   const [isModalRegisterSuccess, setIsModalRegisterSuccess] = useState<boolean>(false);
+  const [isModalCancelSuccess, setIsModalCancelSuccess] = useState<boolean>(false);
   const [isModalCharge, setIsModalCharge] = useState<boolean>(false);
+  const [isModalEnoughMoney, setIsModalEnoughMoney] = useState<boolean>(false);
+
   const [isModalShakeSuccess, setIsModalShakeSuccess] = useState<boolean>(false);
   const [dataSuccessShake, setDataSuccessShake] = useState<IDataSuccessShake>();
   const [isChargeTurn, setIsChargeTurn] = useState<boolean>(false);
@@ -69,6 +72,7 @@ const Home: NextPage = () => {
     const shakeService = new ShakeDetectorService();
     shakeService.initialize();
     shakeService.onShake(() => {
+      alert("Shake");
       if(statusShake === TStatusShake.inProgress) {
         return;
       }
@@ -194,7 +198,7 @@ const Home: NextPage = () => {
         setTimeout(() => {
           setStatusShake(TStatusShake.result);
           setDataSuccessShake({
-            title: res.status === "OK" ? trans.Congratulations : trans.Retry,
+            title: res.status === "OK" ? (res?.gift.id !== "UNLUCKY" ? trans.Congratulations : "") : trans.Retry,
             description: res?.gift?.name || res?.message || "",
             image: res.status === "OK" ? getImageSuccessModal(res?.gift?.id) : ""
           });
@@ -372,6 +376,9 @@ const Home: NextPage = () => {
         if (res.status === 'OK') {
           setRefreshUserInfo(true)
           setIsModalCharge(false)
+        } else {
+          setIsModalCharge(false)
+          setIsModalEnoughMoney(true);
         }
       })
       .catch()
@@ -389,7 +396,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Next.js MiniGame By 9Space</title>
+        <title>Treasure game</title>
         <meta
           property="og:image"
           content="https://nextjsconf-pics.vercel.app/og-image.png"
@@ -462,7 +469,7 @@ const Home: NextPage = () => {
           description={trans["Top up to buy more"]}
           textConfirm={trans["Buy more"]}
           image={"noMoney"}
-          open={false}
+          open={isModalEnoughMoney}
         />
         <ModalDefaultBase
           title={trans["You have ran out of turn"]}
@@ -479,11 +486,18 @@ const Home: NextPage = () => {
         />
         <ModalDefaultBase
           title={trans["Register Successfully"]}
-          description={trans["You have 5 turns. Play the game now!"]}
+          description={trans["Play the game now!"]}
           textConfirm={trans["Play Now"]}
           open={isModalRegisterSuccess}
           handleClose={() => setIsModalRegisterSuccess(false)}
           handleConfirm={() => setIsModalRegisterSuccess(false)}
+        />
+        <ModalDefaultBase
+          title={trans["Cancel Successful"]}
+          textConfirm={trans["Confirm"]}
+          open={isModalCancelSuccess}
+          handleClose={() => setIsModalCancelSuccess(false)}
+          handleConfirm={() => setIsModalCancelSuccess(false)}
         />
         <ModalOtp open={openOtp} type={otpType} phoneNumber={userInfo?.phone || phoneNumber} handleClose={onSubmitOtp} />
         <ModalPhoneNumber open={openPhoneNumber} handleClose={onSubmitPhoneNumber} />

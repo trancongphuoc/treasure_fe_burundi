@@ -42,16 +42,7 @@ const ModalActive: React.FC<IModalActiveProps> = (props) => {
           >
             {trans["Register VIP"]}
           </Typography>
-          <Typography
-            fontSize={"14px"}
-            fontWeight={400}
-            lineHeight={"17px"}
-            color={"#502A00"}
-            textAlign={"center"}
-            mb={"12px"}
-          >
-            {trans["Register here or send ON to XXX to receive 5 spins. Thanks!"]}
-          </Typography>
+
           <Box
             display={"flex"}
             alignItems={"center"}
@@ -59,6 +50,14 @@ const ModalActive: React.FC<IModalActiveProps> = (props) => {
             justifyContent={"center"}
             mb={"20px"}
           >
+            <Typography
+              fontSize={"16px"}
+              fontWeight={600}
+              lineHeight={"19px"}
+              color={"#502A00"}
+            >
+              {trans["Fee"]}: 
+            </Typography>
             <Typography
               fontSize={"16px"}
               fontWeight={400}
@@ -90,30 +89,12 @@ const ModalActive: React.FC<IModalActiveProps> = (props) => {
             mb={"20px"}
           >
             <Typography
-              fontSize={"24px"}
-              fontWeight={600}
-              lineHeight={"29px"}
-              color={"#502A00"}
-              textTransform={"uppercase"}
-            >
-              {trans.ON}
-            </Typography>
-            <Typography
               fontSize={"14px"}
               fontWeight={600}
               lineHeight={"17px"}
               color={"#502A00"}
             >
-              {trans.send}
-            </Typography>
-            <Typography
-              fontSize={"24px"}
-              fontWeight={600}
-              lineHeight={"29px"}
-              color={"#502A00"}
-              textTransform={"uppercase"}
-            >
-              {trans[5500]}
+              {trans["Buy more"]}: {trans["5 TURNS/100 FBU"]}
             </Typography>
           </Box>
           <Box display={"flex"} alignItems={"center"} justifyContent={"center"}>

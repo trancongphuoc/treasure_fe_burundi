@@ -11,8 +11,8 @@ const translations = {
     "Invite": "Invite",
     "Shake": "Shake",
     "Shake your phone or touch the screen to get gifts": "Shake your phone or touch the screen to get gifts",
-    "You have ? turns": "You have {{count}} turns",
-    "You have ? turn": "You have {{count}} turn",
+    "You have ? turns": "You have {} turns",
+    "You have ? turn": "You have {} turn",
     "You have": "You have",
     "Turn": "Turn",
     "Turns": "Turns",
@@ -31,6 +31,7 @@ const translations = {
     "Buy more": "Buy more",
     "Buy more successful": "Buy more successful",
     "You have 5 turns. Play the game now!": "You have 5 turns. Play the game now!",
+    "Play the game now!": "Play the game now!",
     "Play Now": "PLAY NOW",
     "Not Enough Money": "NOT ENOUGH MONEY",
     "Top up to buy more": "Top up to buy more",
@@ -47,6 +48,8 @@ const translations = {
     "History": "History",
     "Share": "Share",
     "Cancel": "Cancel",
-    "Guide": "Guide"
+    "Guide": "Guide",
+    "Fee": "Fee",
+    "Cancel Successful": "Cancel successful"
 }
 export default translations;

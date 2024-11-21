@@ -1,6 +1,6 @@
 export const getImageSuccessModal = (type: string): string => {
   if (type?.includes("STARS")) {
-    return "/images/icon-star.svg";
+    return "/images/coin.svg";
   } else if (type?.includes("MONEY") || type?.includes("FBU")) {
     return "/images/money-default.svg";
   } else

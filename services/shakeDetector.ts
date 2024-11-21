@@ -67,14 +67,7 @@ export class ShakeDetectorService {
       if (motionPermission === "granted") {
         this.initializeShake();
       } else if (ios) {
-        const userPrompt = confirm(
-          "This app needs motion detection permission to work. Do you want to enable it?"
-        );
-        if (userPrompt) {
-          await this.requestMotionPermission();
-        } else {
-          this.initializeShake();
-        }
+        await this.requestMotionPermission();
       } else {
         this.initializeShake();
       }

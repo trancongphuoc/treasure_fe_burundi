@@ -70,7 +70,7 @@ const ModalPhoneNumber: React.FC<IModalPhoneNumberProps> = (props) => {
             textAlign={"center"}
             mb={"12px"}
           >
-            {trans["Enter phone number"]}
+            {trans["Login"]}
           </Typography>
           <Typography
             fontSize={"14px"}

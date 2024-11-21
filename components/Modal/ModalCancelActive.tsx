@@ -10,15 +10,20 @@ import useTrans from "../../lang/useTrans";
 
 interface IModalCancelActiveProps extends DialogProps {
   handleClose?: (data?: any) => void;
+  setIsModalCancelSuccess? : any
 }
 const ModalCancelActive: React.FC<IModalCancelActiveProps> = (props) => {
-  const { handleClose, ...dialogProps } = props;
+  const { handleClose, setIsModalCancelSuccess, ...dialogProps } = props;
   const trans = useTrans();
   const onSubmitCancel = () => {
     MpsService.mpsCancel().then((res) => {
       handleClose({
         type: OtpType.MpsCancelVerify,
       })
+
+      if(res.status == "OK") {
+        setIsModalCancelSuccess(true)
+      }
     }).catch((err) => {
     });
   };

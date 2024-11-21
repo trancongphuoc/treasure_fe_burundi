@@ -94,7 +94,7 @@ const HomeHeader: React.FC<IHomeHeaderProps> = (props) => {
             sx={{ minWidth: "88px", px: "8px" }}
             startIcon={
               <img
-                src="/images/icon-star.png"
+                src="/images/coin.svg"
                 alt={"icon"}
                 width={24}
                 height={24}

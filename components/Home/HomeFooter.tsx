@@ -7,6 +7,7 @@ import ModalCancelActive from "../Modal/ModalCancelActive";
 import { ImageBase } from "../Images";
 import { RWebShare } from "react-web-share";
 import useTrans from "../../lang/useTrans";
+import ModalDefaultBase from "../../components/Modal/components/ModalDefaultBase";
 
 interface IHomeFooterProps {
   quantityTurn?: number;
@@ -22,6 +23,8 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
   const { quantityTurn, openChest, statusShake, handleRegister, handleCancel, userInfo, muteAudioBackground } = props;
   const [isOpenModalActive, setIsOpenModalActive] = useState<boolean>(false);
   const [isOpenModalCancel, setIsOpenModalCancel] = useState<boolean>(false);
+  const [isModalCancelSuccess, setIsModalCancelSuccess] = useState<boolean>(false);
+
   const trans = useTrans();
 
   const handleModalActive = (data?: any) => {
@@ -87,7 +90,7 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
       </div>
     );
   };
-
+  const stringParts = trans["You have ? turns"].split("{}");
   return (
     <>
       {statusShake === "result" && (
@@ -137,7 +140,7 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
             color={"#502A00"}
             textAlign={"center"}
           >
-            {trans["You have"]}
+            {stringParts[0]}
           </Typography>
           <Typography
             fontSize={"24px"}
@@ -153,6 +156,7 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
           >
             {quantityTurn}
           </Typography>
+          {stringParts[1] !== undefined && 
           <Typography
             fontSize={"16px"}
             fontWeight={700}
@@ -160,8 +164,8 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
             color={"#502A00"}
             textAlign={"center"}
           >
-            {trans.Turns}
-          </Typography>
+            {stringParts[1]}
+          </Typography>}
         </Box>
         <Box
           sx={{
@@ -215,7 +219,15 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
         open={isOpenModalActive}
         handleClose={handleModalActive}
       />
-      <ModalCancelActive open={isOpenModalCancel} handleClose={handleModalCancel} />
+      <ModalCancelActive open={isOpenModalCancel} handleClose={handleModalCancel} setIsModalCancelSuccess={setIsModalCancelSuccess}/>
+      <ModalDefaultBase
+          title={trans["Cancel Successful"]}
+          // description={trans["Cancel Successful"]}
+          textConfirm={trans["Confirm"]}
+          open={isModalCancelSuccess}
+          handleClose={() => setIsModalCancelSuccess(false)}
+          handleConfirm={() => setIsModalCancelSuccess(false)}
+      />
     </>
   );
 };
