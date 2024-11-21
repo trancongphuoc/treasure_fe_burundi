@@ -19,10 +19,12 @@ interface IHomeFooterProps {
   handleCancel: (data?: any) => void;
   userInfo?: UserInfoResponse;
   muteAudioBackground?: boolean;
+  isOnShake?: boolean;
+  setIsOnShake: (data?: any) => void;
 }
 
 const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
-  const { quantityTurn, openChest, statusShake, handleRegister, handleCancel, userInfo, muteAudioBackground } = props;
+  const { quantityTurn, openChest, statusShake, handleRegister, handleCancel, userInfo, muteAudioBackground, isOnShake, setIsOnShake } = props;
   const [isOpenModalActive, setIsOpenModalActive] = useState<boolean>(false);
   const [isOpenModalCancel, setIsOpenModalCancel] = useState<boolean>(false);
   const [isModalCancelSuccess, setIsModalCancelSuccess] = useState<boolean>(false);
@@ -55,29 +57,28 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
     }
   }, [openChest]);
 
-  // let isShakeInitialized = false; // Biến cờ bên ngoài
-
-  // useEffect(() => {
-  //   if(!isShakeInitialized) {
-  //     alert("on Shake")
-  //     isShakeInitialized = true;
-  //     ShakeDetectorService.onShake(() => {
-  //       if(statusShake === TStatusShake.inProgress) {
-  //         return;
-  //       }
-  //       // alert("The chest is now open! 🎉");
-  //       // openChest(userInfo);
-  //       if (!quantityTurn || quantityTurn < 1) {
-  //         openChest({ totalTurn: 0 })
-  //         return
-  //       }
-  //       if (audioRef && audioRef?.current) {
-  //         audioRef.current.load();
-  //         openChest && openChest();
-  //       }
-  //     });
-  //   }
-  // })
+  useEffect(() => {
+    if(!isOnShake) {
+      alert("on Shake")
+      setIsOnShake(true);
+      ShakeDetectorService.onShake(() => {
+        alert("shake")
+        if(statusShake === TStatusShake.inProgress) {
+          return;
+        }
+        // alert("The chest is now open! 🎉");
+        // openChest(userInfo);
+        if (!quantityTurn || quantityTurn < 1) {
+          openChest({ totalTurn: 0 })
+          return
+        }
+        if (audioRef && audioRef?.current) {
+          audioRef.current.load();
+          openChest && openChest();
+        }
+      });
+    }
+  })
 
   useEffect(() => {
     if (videoRef && videoRef?.current) {

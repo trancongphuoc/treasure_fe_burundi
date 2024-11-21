@@ -62,6 +62,8 @@ const Home: NextPage = () => {
   const [isModalShakeSuccess, setIsModalShakeSuccess] = useState<boolean>(false);
   const [dataSuccessShake, setDataSuccessShake] = useState<IDataSuccessShake>();
   const [isChargeTurn, setIsChargeTurn] = useState<boolean>(false);
+  const [isOnShake, setIsOnShake] = useState<boolean>(false);
+
   const [muteAudioBg, setMuteAudioBg] = useState<boolean>(false);
   const trans = useTrans();
   const handleStatusShake = (status: TStatusShake) => {
@@ -74,18 +76,18 @@ const Home: NextPage = () => {
   const audioRef = useRef<any>(null);
   
   useEffect(() => {
-    shakeService.onShake(() => {
-      alert("shake")
-      if(statusShake === TStatusShake.inProgress) {
-        return;
-      }
-      // alert("The chest is now open! 🎉");
-      if (audioRef && audioRef?.current) {
-        audioRef.current.load();
-      }
+    // ShakeDetectorService.onShake(() => {
+    //   alert("shake")
+    //   if(statusShake === TStatusShake.inProgress) {
+    //     return;
+    //   }
+    //   // alert("The chest is now open! 🎉");
+    //   if (audioRef && audioRef?.current) {
+    //     audioRef.current.load();
+    //   }
 
-      openChest(userInfo);
-    });
+    //   openChest(userInfo);
+    // });
     if (router.isReady) {
       if (router.query?.token) {
         axios.post('api/auth/verify_natcom', { token: router.query?.token }, {
@@ -269,7 +271,7 @@ const Home: NextPage = () => {
   };
 
   const onSubmitOtp = (data: any) => {
-    shakeService.initialize();
+    ShakeDetectorService.initialize();
     setOpenOtp(false);
     setOtpType(null);
     switch (data?.type) {
@@ -470,6 +472,8 @@ const Home: NextPage = () => {
             handleCancel={handleCancel}
             userInfo={userInfo}
             muteAudioBackground={muteAudioBg}
+            isOnShake={isOnShake}
+            setIsOnShake={setIsOnShake}
           />
         </Box>
         <ModalDefaultBase
