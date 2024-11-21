@@ -45,6 +45,11 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
 
   const videoRef = useRef<any>(null);
   const audioRef = useRef<any>(null);
+  const quantityTurnRef = useRef(quantityTurn); // Tạo ref để lưu trữ giá trị mới nhất
+
+  useEffect(() => {
+    quantityTurnRef.current = quantityTurn; // Cập nhật ref khi quantityTurn thay đổi
+  }, [quantityTurn]);
 
   const handleOpenChest = useCallback(() => {
     if (!quantityTurn || quantityTurn < 1) {
@@ -68,9 +73,9 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
         }
         // alert("The chest is now open! 🎉");
         // openChest(userInfo);
-        if (!quantityTurn || quantityTurn < 1) {
-          openChest({ totalTurn: 0 })
-          return
+        if (quantityTurnRef.current < 1) {
+          openChest({ totalTurn: 0 });
+          return;
         }
         if (audioRef && audioRef?.current) {
           audioRef.current.load();
