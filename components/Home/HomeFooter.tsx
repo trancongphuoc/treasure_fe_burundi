@@ -8,6 +8,8 @@ import { ImageBase } from "../Images";
 import { RWebShare } from "react-web-share";
 import useTrans from "../../lang/useTrans";
 import ModalDefaultBase from "../../components/Modal/components/ModalDefaultBase";
+import { ShakeDetectorService } from "../../services/shakeDetector";
+import {TStatusShake } from "../../constants";
 
 interface IHomeFooterProps {
   quantityTurn?: number;
@@ -52,6 +54,18 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
       openChest && openChest();
     }
   }, [openChest]);
+
+  useEffect(() => {
+    const shakeService = new ShakeDetectorService();
+    shakeService.initialize();
+    shakeService.onShake(() => {
+      if(statusShake === TStatusShake.inProgress) {
+        return;
+      }
+      // alert("The chest is now open! 🎉");
+      openChest(userInfo);
+    });
+  })
 
   useEffect(() => {
     if (videoRef && videoRef?.current) {

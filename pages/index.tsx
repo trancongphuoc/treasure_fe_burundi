@@ -69,16 +69,16 @@ const Home: NextPage = () => {
   };
 
   useEffect(() => {
-    const shakeService = new ShakeDetectorService();
-    shakeService.initialize();
-    shakeService.onShake(() => {
-      alert("Shake");
-      if(statusShake === TStatusShake.inProgress) {
-        return;
-      }
-      // alert("The chest is now open! 🎉");
-      openChest(userInfo);
-    });
+    // const shakeService = new ShakeDetectorService();
+    // shakeService.initialize();
+    // shakeService.onShake(() => {
+    //   alert("Shake");
+    //   if(statusShake === TStatusShake.inProgress) {
+    //     return;
+    //   }
+    //   // alert("The chest is now open! 🎉");
+    //   openChest(userInfo);
+    // });
     if (router.isReady) {
       if (router.query?.token) {
         axios.post('api/auth/verify_natcom', { token: router.query?.token }, {

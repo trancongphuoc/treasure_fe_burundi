@@ -81,15 +81,15 @@ const HomeHeader: React.FC<IHomeHeaderProps> = (props) => {
         justifyContent={"space-between"}
       >
         <Box display={"flex"} alignItems={"center"} gap={"8px"}>
-          <NormalButton
+          {/* <NormalButton
             sx={{
               ".MuiButton-startIcon": { marginRight: "4px" },
             }}
             onClick={logout}
             startIcon={<XMarkIcon />}
           >
-            {/* {trans.Logout} */}
-          </NormalButton>
+            {trans.Logout}
+          </NormalButton> */}
           <NormalButton
             sx={{ minWidth: "88px", px: "8px" }}
             startIcon={
