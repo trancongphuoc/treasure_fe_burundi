@@ -1,13 +1,15 @@
 import Shake from 'shake.js';
 
 export class ShakeDetectorService {
-  private static shake: any; // Biến để lưu instance của Shake.js
   private static threshold: number = 15; // Ngưỡng lắc
-  private static eventListener: () => void = () => {}; // Placeholder cho sự kiện shake
+  private static shake = null; // Biến để lưu instance của Shake.js
+  private static eventListener: (() => void) | null = null; // Placeholder cho sự kiện shake
 
   // Gắn sự kiện khi lắc
   public static onShake(listener: () => void) {
-    this.shake = new Shake({ threshold: this.threshold });
+    if (!this.shake) {
+      this.shake = new Shake({ threshold: ShakeDetectorService.threshold });
+    }
     this.shake.start();
 
     this.eventListener = listener;
