@@ -63,6 +63,10 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
   }, [openChest]);
 
   const handleOpenChestRef = useRef(handleOpenChest);
+  
+  useEffect(() => {
+    handleOpenChestRef.current = handleOpenChest;
+  }, [handleOpenChest]);
 
   useEffect(() => {
     if(!isOnShake) {
