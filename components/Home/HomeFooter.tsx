@@ -58,7 +58,6 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
     }
     if (audioRef && audioRef?.current) {
       audioRef.current.load();
-      audioRef.current.play();
       openChest && openChest();
     }
   }, [openChest]);
@@ -123,7 +122,7 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
           <source src={"/audio/audio_open.mp3"} type="audio/mpeg" />
         </audio>
       )}
-      <audio ref={audioRef} muted={props.muteAudioBackground} loop autoPlay>
+      <audio ref={audioRef} muted={muteAudioBackground} loop autoPlay>
         <source src={"/audio/audio_background.mp3"} type="audio/mpeg" />
       </audio>
       <Box position={"absolute"} bottom={"20px"} width={"100%"}>
