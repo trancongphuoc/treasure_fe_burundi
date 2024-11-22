@@ -63,27 +63,37 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
   }, [openChest]);
 
   useEffect(() => {
-    if(!isOnShake) {
-      setIsOnShake(true);
-      ShakeDetectorService.onShake(() => {
-        // if(statusShake === TStatusShake.inProgress) {
-        //   return;
-        // }
-        // alert("The chest is now open! 🎉");
-        // openChest(userInfo);
-        // if (quantityTurnRef.current < 1) {
-        //   openChest({ totalTurn: 0 });
-        //   return;
-        // }
-        // if (audioRef && audioRef?.current) {
-        //   audioRef.current.load();
-        //   openChest && openChest();
-        // }
+    // if(!isOnShake) {
+    //   setIsOnShake(true);
+    //   ShakeDetectorService.onShake(() => {
+    //     // if(statusShake === TStatusShake.inProgress) {
+    //     //   return;
+    //     // }
+    //     // alert("The chest is now open! 🎉");
+    //     // openChest(userInfo);
+    //     // if (quantityTurnRef.current < 1) {
+    //     //   openChest({ totalTurn: 0 });
+    //     //   return;
+    //     // }
+    //     // if (audioRef && audioRef?.current) {
+    //     //   audioRef.current.load();
+    //     //   openChest && openChest();
+    //     // }
+    //     handleOpenChest();
+    //   });
 
-        handleOpenChest();
-      });
-    }
-  }, [isOnShake, statusShake, openChest, audioRef]);
+    //   return () => {
+    //     ShakeDetectorService.offShake();
+    //   };
+    // }
+    ShakeDetectorService.onShake(() => {
+      handleOpenChest();
+    });
+
+    return () => {
+      ShakeDetectorService.stop();
+    };
+  }, [handleOpenChest]);
 
   useEffect(() => {
     if (videoRef && videoRef?.current) {
