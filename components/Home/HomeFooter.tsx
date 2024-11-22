@@ -62,29 +62,15 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
     }
   }, [openChest]);
 
+  const handleOpenChestRef = useRef(handleOpenChest);
+
   useEffect(() => {
     if(!isOnShake) {
       alert("on Shake")
       setIsOnShake(true);
       ShakeDetectorService.onShake(() => {
         alert("shake")
-        // if(statusShake === TStatusShake.inProgress) {
-        //   return;
-        // }
-        // // alert("The chest is now open! 🎉");
-        // // openChest(userInfo);
-        // alert(quantityTurnRef.current)
-
-        // if (quantityTurnRef.current < 1) {
-        //   openChest({ totalTurn: 0 });
-        //   return;
-        // }
-        // if (audioRef && audioRef?.current) {
-        //   alert("open Chest")
-        //   audioRef.current.load();
-        //   openChest && openChest();
-        // }
-        handleOpenChest();
+        handleOpenChestRef.current();
       });
     }
   });
