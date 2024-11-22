@@ -67,12 +67,14 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
   }, [openChest]);
 
   useEffect(() => {
+    alert("on shake")
     ShakeDetectorService.onShake(() => {
       alert("shake")
       handleOpenChest();
     });
 
     return () => {
+      alert("stop")
       ShakeDetectorService.stop();
     };
   }, [handleOpenChest]);
