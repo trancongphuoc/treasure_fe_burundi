@@ -68,25 +68,26 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
       setIsOnShake(true);
       ShakeDetectorService.onShake(() => {
         alert("shake")
-        if(statusShake === TStatusShake.inProgress) {
-          return;
-        }
-        // alert("The chest is now open! 🎉");
-        // openChest(userInfo);
-        alert(quantityTurnRef.current)
+        // if(statusShake === TStatusShake.inProgress) {
+        //   return;
+        // }
+        // // alert("The chest is now open! 🎉");
+        // // openChest(userInfo);
+        // alert(quantityTurnRef.current)
 
-        if (quantityTurnRef.current < 1) {
-          openChest({ totalTurn: 0 });
-          return;
-        }
-        if (audioRef && audioRef?.current) {
-          alert("open Chest")
-          audioRef.current.load();
-          openChest && openChest();
-        }
+        // if (quantityTurnRef.current < 1) {
+        //   openChest({ totalTurn: 0 });
+        //   return;
+        // }
+        // if (audioRef && audioRef?.current) {
+        //   alert("open Chest")
+        //   audioRef.current.load();
+        //   openChest && openChest();
+        // }
+        handleOpenChest();
       });
     }
-  }, [isOnShake, statusShake, openChest, audioRef]);
+  });
 
   useEffect(() => {
     if (videoRef && videoRef?.current) {
