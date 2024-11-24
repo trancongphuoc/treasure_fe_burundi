@@ -169,11 +169,22 @@ const Home: NextPage = () => {
   }, [router]);
 
   useEffect(() => {
-    return () => {
-      if (audioRef.current) {
+    // Tạm dừng hoặc phát lại âm thanh khi trạng thái trang thay đổi
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
         audioRef.current.pause();
-        audioRef.current.currentTime = 0; // Tắt nhạc khi cha unmount
+      } else if (document.visibilityState === "visible") {
+        audioRef.current.play();
       }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      // Xóa sự kiện và dừng âm thanh khi component unmount
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0; // Reset thời gian phát
     };
   }, []);
 
