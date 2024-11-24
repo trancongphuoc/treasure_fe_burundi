@@ -102,11 +102,18 @@ const ModalPhoneNumber: React.FC<IModalPhoneNumberProps> = (props) => {
                 autoFocus: true,
                 style: {
                   textAlign: 'center'
-                }
+                },
+                maxLength: 14
               }}
               value={phoneNumber}
+              // onChange={(event) => {
+              //   setPhoneNumber(event.target.value)
+              // }}
               onChange={(event) => {
-                setPhoneNumber(event.target.value)
+                const value = event.target.value;
+                if (/^\d*$/.test(value)) {
+                  setPhoneNumber(value); // Chỉ cập nhật nếu giá trị là số
+                }
               }}
             />
           </Box>

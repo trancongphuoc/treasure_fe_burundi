@@ -10,9 +10,10 @@ interface IModalOtpProps extends DialogProps {
   type: any
   phoneNumber?: string
   handleClose: (value: any) => void;
+  errorMessage?: string
 }
 const ModalOtp: React.FC<IModalOtpProps> = (props) => {
-  const { type, phoneNumber, handleClose, ...dialogProps } = props;
+  const { type, phoneNumber, handleClose, errorMessage, ...dialogProps } = props;
   const trans = useTrans();
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef([]);
@@ -64,7 +65,7 @@ const ModalOtp: React.FC<IModalOtpProps> = (props) => {
       setOtp(["", "", "", "", "", ""])
     })
   }
-
+  console.log(errorMessage)
   return (
     <ModalBase {...dialogProps} handleClose={handleClose}>
       <>
@@ -95,6 +96,21 @@ const ModalOtp: React.FC<IModalOtpProps> = (props) => {
           >
             {`${trans["Please enter the OTP code sent to phone number"]} ${props.phoneNumber}`}
           </Typography>
+          {errorMessage && 
+          <Typography
+            fontSize={"14px"}
+            fontWeight={400}
+            lineHeight={"17px"}
+            color={"#502A00"}
+            textAlign={"center"}
+            mb={"12px"}
+            whiteSpace="pre-line"
+            sx={{ color: "#FF0000" }}
+          >
+            {errorMessage}
+          </Typography>
+          }
+          
           <Box
             display={"flex"}
             alignItems={"center"}

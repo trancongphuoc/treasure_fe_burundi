@@ -21,10 +21,12 @@ interface IHomeFooterProps {
   muteAudioBackground?: boolean;
   isOnShake?: boolean;
   setIsOnShake: (data?: any) => void;
+  videoRef?: any
+  audioRef?: any
 }
 
 const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
-  const { quantityTurn, openChest, statusShake, handleRegister, handleCancel, userInfo, muteAudioBackground, isOnShake, setIsOnShake } = props;
+  const { quantityTurn, openChest, statusShake, handleRegister, handleCancel, userInfo, muteAudioBackground, isOnShake, setIsOnShake, videoRef, audioRef } = props;
   const [isOpenModalActive, setIsOpenModalActive] = useState<boolean>(false);
   const [isOpenModalCancel, setIsOpenModalCancel] = useState<boolean>(false);
   const [isModalCancelSuccess, setIsModalCancelSuccess] = useState<boolean>(false);
@@ -43,8 +45,8 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
     }
   };
 
-  const videoRef = useRef<any>(null);
-  const audioRef = useRef<any>(null);
+  // const videoRef = useRef<any>(null);
+  // const audioRef = useRef<any>(null);
   const quantityTurnRef = useRef(quantityTurn); // Tạo ref để lưu trữ giá trị mới nhất
 
   useEffect(() => {
@@ -103,9 +105,9 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
       <div>
         <RWebShare
           data={{
-            text: "Welcome to Trezò Kache game!",
-            url: location.origin,
-            title: "Trezò Kache",
+            text: "Urakaza mu mukino wa Itunga!",
+            url: window.location.origin,
+            title: "Treasure",
           }}
           onClick={() => console.log("shared successfully!")}
         >
@@ -229,8 +231,8 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
           }}>{trans.Cancel}</PrimaryButton>}
           <RWebShare
             data={{
-              text: "Welcome to Treasure game!",
-              url: 'https://minigame-mps.vercel.app/',
+              text: "Urakaza mu mukino wa Itunga!",
+              url: "https://treasure.lumitel.bi/",
               title: "Treasure",
             }}
             onClick={() => console.log("shared successfully!")}

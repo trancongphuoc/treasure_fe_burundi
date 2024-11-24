@@ -19,6 +19,7 @@ const ModalActive: React.FC<IModalActiveProps> = (props) => {
     MpsService.mpsRegister().then((res) => {
       handleClose({
         type:OtpType.MpsRegisterVerify,
+        res: res
       })
     }).catch((err) => {
     });
@@ -70,7 +71,7 @@ const ModalActive: React.FC<IModalActiveProps> = (props) => {
                 backgroundColor: "#BD843F"
               }}
             >
-              {trans["5 TURNS/100 FBU"]}
+              {trans["5 TURNS/120 FBU"]}
             </Typography>
             <Typography
               fontSize={"16px"}

@@ -423,6 +423,8 @@ export type AuthVerifyNatcom = BaseRequestOtp & {
 export type AuthVerifyOtpResponse = {
   accessToken: string;
   tokenType: string;
+  status?: string;
+  message?: string;
 };
 export type AuthVerifyNatcomResponse = {
   accessToken: string;

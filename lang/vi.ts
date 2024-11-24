@@ -18,6 +18,7 @@ const translations = {
     "Turns": "Turns",
     "Register VIP": "Register VIP",
     "Register here or send ON to XXX to receive 5 spins. Thanks!": "Register here or send ON to XXX to receive 5 spins. Thanks!",
+    "5 TURNS/120 FBU": "5 TURNS/120 FBU",
     "5 TURNS/100 FBU": "5 TURNS/100 FBU",
     "/1 day": "/1 day",
     "ON": "ON",

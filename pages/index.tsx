@@ -20,6 +20,7 @@ import { ShakeDetectorService } from "../services/shakeDetector";
 import { getImageSuccessModal } from "../utils";
 import ModalPhoneNumber from "../components/Modal/ModalPhoneNumber";
 import useTrans from "../lang/useTrans";
+import { vi } from "date-fns/locale";
 const Shake = require('shake.js');
 const Qs = require("qs");
 
@@ -48,6 +49,8 @@ const Home: NextPage = () => {
   const router = useRouter();
   const [statusShake, setStatusShake] = useState<string>(null);
   const [phoneNumber, setPhoneNumber] = useState<string>(null);
+  const [errorMessage, setErrorMessage] = useState<string>(null);
+
   const [userInfo, setUserInfo] = useState<UserInfoResponse>(null);
   const [otpType, setOtpType] = useState<string>(null);
   const [openOtp, setOpenOtp] = useState<boolean>(false);
@@ -69,8 +72,6 @@ const Home: NextPage = () => {
   const handleStatusShake = (status: TStatusShake) => {
     setStatusShake(status);
   };
-  const shakeService = new ShakeDetectorService();
-
   
   const videoRef = useRef<any>(null);
   const audioRef = useRef<any>(null);
@@ -168,6 +169,15 @@ const Home: NextPage = () => {
   }, [router]);
 
   useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0; // Tắt nhạc khi cha unmount
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     if (refreshUserInfo) {
       AuthService.userInfo().then((res) => {
         setUserInfo(res);
@@ -257,8 +267,13 @@ const Home: NextPage = () => {
       if (data?.type) {
         // setOtpType(data?.type);
         // setOpenOtp(true);
-        setRefreshUserInfo(true)
-        setIsModalRegisterSuccess(true);
+        if(data?.res.status != "OK") {
+          setIsModalEnoughMoney(true);
+        } else {
+          setRefreshUserInfo(true)
+          setIsModalRegisterSuccess(true);
+        }
+
       }
   };
 
@@ -299,10 +314,12 @@ const Home: NextPage = () => {
             window.location.reload()
           } else {
             setOtpType(data?.type);
+            setErrorMessage(res.message)
             setOpenOtp(true);
           }
         })
           .catch(err => {
+            setErrorMessage("Kode OTP siyo, subira muyisubizemwo")
             setOtpType(data?.type);
             setOpenOtp(true);
           });
@@ -465,6 +482,8 @@ const Home: NextPage = () => {
           <HomeHeader phoneNumber={userInfo?.phone || phoneNumber} totalStar={userInfo?.totalStar || 0} muteAudioBackground={onMute} />
           <HexTileLayout />
           <HomeFooter
+            audioRef={audioRef}
+            videoRef={videoRef}
             statusShake={statusShake}
             openChest={openChest}
             quantityTurn={userInfo?.totalPlay || 0}
@@ -511,7 +530,7 @@ const Home: NextPage = () => {
           handleClose={() => setIsModalCancelSuccess(false)}
           handleConfirm={() => setIsModalCancelSuccess(false)}
         />
-        <ModalOtp open={openOtp} type={otpType} phoneNumber={userInfo?.phone || phoneNumber} handleClose={onSubmitOtp} />
+        <ModalOtp errorMessage={errorMessage} open={openOtp} type={otpType} phoneNumber={userInfo?.phone || phoneNumber} handleClose={onSubmitOtp} />
         <ModalPhoneNumber open={openPhoneNumber} handleClose={onSubmitPhoneNumber} />
         <ModalSuccess
           open={isModalShakeSuccess}
