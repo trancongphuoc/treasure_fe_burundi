@@ -146,7 +146,7 @@ const ModalTop: React.FC<IModalTopProps> = (props) => {
                   color={"#502A00"}
                   mb={"4px"}
                 >
-                  {item.phone}
+                  {item.phone.startsWith("257") ? item.phone.slice(3) : item.phone}
                 </Typography>
             </Box>
             <Box display={"flex"} justifyContent={"center"} gap={"12px"} flex={1}>
