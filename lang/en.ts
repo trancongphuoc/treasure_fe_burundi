@@ -49,5 +49,9 @@ export default {
     "Cancel": "Gukuramwo",
     "Guide": "Gufasha",
     "Fee": "Igiciro",
-    "Cancel Successful": "Guhagarika vyagenze neza."
+    "Cancel Successful": "Guhagarika vyagenze neza.",
+    "Rank": "URUONDE IZAHABU",
+    "No.": "No.",
+    "Phone": "Inomera Ya Terefone",
+    "Gold": "Izahabu"
 }

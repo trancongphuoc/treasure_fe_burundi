@@ -11,6 +11,7 @@ import { ImageBase } from "../Images";
 import useTrans from "../../lang/useTrans";
 import { StorageKey } from "../../constants";
 import { log } from "console";
+import ModalTop from "../Modal/ModalTop";
 
 interface IHomeHeaderProps {
   totalStar?: number;
@@ -32,6 +33,7 @@ const HomeHeader: React.FC<IHomeHeaderProps> = (props) => {
 
   const [isOpenModalInfo, setIsOpenModalInfo] = useState<boolean>(false);
   const [isOpenModalHistory, setIsOpenModalHistory] = useState<boolean>(false);
+  const [isOpenModalTop, setIsOpenModalTop] = useState<boolean>(false);
   const [dataHistory, setDataHistory] = useState<any>([]);
   const [muteAudioBg, setMuteAudioBg] = useState<boolean>(false);
 
@@ -63,6 +65,31 @@ const HomeHeader: React.FC<IHomeHeaderProps> = (props) => {
         })
     } else
       setIsOpenModalHistory(!isOpenModalHistory);
+  };
+
+  const handleModalTop = () => {
+    if (!isOpenModalTop) {
+      PlayService.playTop().then((res) => {
+        // const _historyData = res?.reduce((arr, item, index) => {
+        //   arr.push({
+        //     id: item.gift?.id,
+        //     title: item.gift?.name || '',
+        //     time: format(new Date(item.addTime), 'HH:mm'),
+        //     date: format(new Date(item.addTime), 'dd/MM/yyyy'),
+        //     price: '+' + item.gift?.noItem,
+        //     image: getImageSuccessModal(item.gift?.id)
+        //   })
+        //   return arr
+        // }, [])
+        console.log(res)
+        setDataHistory(res)
+        setIsOpenModalTop(!isOpenModalTop);
+      })
+        .catch((err) => {
+          setDataHistory([])
+        })
+    } else
+    setIsOpenModalTop(!isOpenModalTop);
   };
 
   const logout = () => {
@@ -114,14 +141,15 @@ const HomeHeader: React.FC<IHomeHeaderProps> = (props) => {
               ? <VolumeOff />
               : <VolumeUp />}
           </NormalButton>
-          {phoneNumber && (
+          {/* {phoneNumber && (
             <NormalButton sx={{ minWidth: "88px", px: "8px" }}>
               {phoneNumber.startsWith("257") ? phoneNumber.slice(3) : phoneNumber}
             </NormalButton>
-          )}
+          )} */}
 
         </Box>
         <Box display={"flex"} alignItems={"center"} gap={"16px"}>
+
           <IconButton
             sx={{
               padding: 0,
@@ -130,6 +158,15 @@ const HomeHeader: React.FC<IHomeHeaderProps> = (props) => {
             onClick={handleModalInfo}
           >
             <InfoIcon />
+          </IconButton>
+          <IconButton
+            sx={{
+              padding: 0,
+              "&:hover": { backgroundColor: "transparent" },
+            }}
+            onClick={handleModalTop}
+          >
+            <ImageBase src={"/images/home_icon/top.svg"} width={36} height={36} />
           </IconButton>
           <IconButton
             sx={{
@@ -146,6 +183,12 @@ const HomeHeader: React.FC<IHomeHeaderProps> = (props) => {
       <ModalHistory
         open={isOpenModalHistory}
         handleClose={handleModalHistory}
+        dataHistory={dataHistory}
+        phoneNumber={phoneNumber}
+      />
+      <ModalTop
+        open={isOpenModalTop}
+        handleClose={handleModalTop}
         dataHistory={dataHistory}
       />
     </>

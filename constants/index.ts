@@ -15,6 +15,7 @@ export const api = {
   mps_charge: "api/mps/charge",
   play_run: "api/lucky/play",
   play_history: "api/lucky/history",
+  play_top: "api/lucky/top",
   play_share_plus: "api/lucky/share_plus",
   play_get_all_gift: "api/lucky/get_all_gift"
 };

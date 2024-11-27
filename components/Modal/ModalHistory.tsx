@@ -5,6 +5,7 @@ import { Box, DialogContent, Typography } from "@mui/material";
 import DialogTitle from "@mui/material/DialogTitle";
 import { ImageBase } from "../Images";
 import useTrans from "../../lang/useTrans"
+import NormalButton from "../Button/NormalButton";
 
 interface IDataHistory {
   id?: string;
@@ -17,9 +18,10 @@ interface IDataHistory {
 interface IModalHistoryProps extends DialogProps {
   handleClose?: () => void;
   dataHistory?: IDataHistory[];
+  phoneNumber?: string
 }
 const ModalHistory: React.FC<IModalHistoryProps> = (props) => {
-  const { handleClose, dataHistory, ...dialogProps } = props;
+  const { handleClose, dataHistory, phoneNumber, ...dialogProps } = props;
   const trans = useTrans();
   return (
     <ModalBase
@@ -35,7 +37,7 @@ const ModalHistory: React.FC<IModalHistoryProps> = (props) => {
           lineHeight={"22px"}
           color={"#502A00"}
         >
-          {trans.History}
+          {trans.History}{phoneNumber && ( <> ({phoneNumber.startsWith("257") ? phoneNumber.slice(3) : phoneNumber}) </>)}     
         </Typography>
       </DialogTitle>
       <DialogContent

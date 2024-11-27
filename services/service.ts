@@ -298,6 +298,28 @@ export class PlayService {
       axios(configs, resolve, reject);
     });
   }
+
+  static playTop(
+    params: {} = {} as any,
+    options: IRequestOptions = {}
+  ): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + api.play_top;
+
+      const configs: IRequestConfig = getConfigs(
+        "post",
+        "application/json",
+        url,
+        options
+      );
+
+      let data = null;
+
+      configs.data = data;
+      axios(configs, resolve, reject);
+    });
+  }
+
   /**
    * play_share_plus
    */

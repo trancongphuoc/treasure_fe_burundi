@@ -65,7 +65,6 @@ const ModalOtp: React.FC<IModalOtpProps> = (props) => {
       setOtp(["", "", "", "", "", ""])
     })
   }
-  console.log(errorMessage)
   return (
     <ModalBase {...dialogProps} handleClose={handleClose}>
       <>

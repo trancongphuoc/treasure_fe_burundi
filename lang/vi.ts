@@ -51,6 +51,10 @@ const translations = {
     "Cancel": "Cancel",
     "Guide": "Guide",
     "Fee": "Fee",
-    "Cancel Successful": "Cancel successful"
+    "Cancel Successful": "Cancel successful",
+    "Rank": "Rank",
+    "No.": "No.",
+    "Phone": "Phone",
+    "Gold": "Gold"
 }
 export default translations;
