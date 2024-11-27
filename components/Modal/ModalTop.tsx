@@ -66,7 +66,7 @@ const ModalTop: React.FC<IModalTopProps> = (props) => {
         <Box
             display={"flex"}
             alignItems={"center"}
-            justifyContent={"space-between"}
+            // justifyContent={"space-between"}
             // paddingY={"12px"}
             borderBottom={"1px solid #FFFFFF"}
             sx={{
@@ -77,7 +77,7 @@ const ModalTop: React.FC<IModalTopProps> = (props) => {
             // marginBottom={"10px"}
           >
 
-            <Box display={"flex"}  gap={"12px"} flex={1}>
+            <Box display={"flex"} width={60}  gap={"12px"}>
               <Typography
                   fontSize={"14px"}
                   fontWeight={500}
@@ -99,7 +99,7 @@ const ModalTop: React.FC<IModalTopProps> = (props) => {
                   {trans.Phone}
                 </Typography>
             </Box>
-            <Box display={"flex"} justifyContent={"center"} gap={"12px"} flex={1}>
+            <Box display={"flex"} justifyContent={"center"} gap={"12px"} width={90}>
               <Typography
                   fontSize={"14px"}
                   fontWeight={500}
@@ -126,7 +126,7 @@ const ModalTop: React.FC<IModalTopProps> = (props) => {
               },
             }}
           >
-            <Box display={"flex"} paddingLeft={"5px"} gap={"12px"} flex={1}>
+            <Box display={"flex"} width={60} paddingLeft={"5px"} gap={"12px"}>
               <Typography
                   fontSize={"14px"}
                   fontWeight={500}
@@ -149,7 +149,7 @@ const ModalTop: React.FC<IModalTopProps> = (props) => {
                   {item.phone.startsWith("257") ? item.phone.slice(3) : item.phone}
                 </Typography>
             </Box>
-            <Box display={"flex"} justifyContent={"center"} gap={"12px"} flex={1}>
+            <Box display={"flex"} justifyContent={"center"} gap={"12px"} width={90}>
               <Typography
                   fontSize={"14px"}
                   fontWeight={500}

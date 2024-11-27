@@ -35,6 +35,7 @@ const HomeHeader: React.FC<IHomeHeaderProps> = (props) => {
   const [isOpenModalHistory, setIsOpenModalHistory] = useState<boolean>(false);
   const [isOpenModalTop, setIsOpenModalTop] = useState<boolean>(false);
   const [dataHistory, setDataHistory] = useState<any>([]);
+  const [dataTop, setDataTop] = useState<any>([]);
   const [muteAudioBg, setMuteAudioBg] = useState<boolean>(false);
 
   const trans = useTrans();
@@ -70,23 +71,12 @@ const HomeHeader: React.FC<IHomeHeaderProps> = (props) => {
   const handleModalTop = () => {
     if (!isOpenModalTop) {
       PlayService.playTop().then((res) => {
-        // const _historyData = res?.reduce((arr, item, index) => {
-        //   arr.push({
-        //     id: item.gift?.id,
-        //     title: item.gift?.name || '',
-        //     time: format(new Date(item.addTime), 'HH:mm'),
-        //     date: format(new Date(item.addTime), 'dd/MM/yyyy'),
-        //     price: '+' + item.gift?.noItem,
-        //     image: getImageSuccessModal(item.gift?.id)
-        //   })
-        //   return arr
-        // }, [])
         console.log(res)
-        setDataHistory(res)
+        setDataTop(res)
         setIsOpenModalTop(!isOpenModalTop);
       })
         .catch((err) => {
-          setDataHistory([])
+          setDataTop([])
         })
     } else
     setIsOpenModalTop(!isOpenModalTop);
@@ -189,7 +179,7 @@ const HomeHeader: React.FC<IHomeHeaderProps> = (props) => {
       <ModalTop
         open={isOpenModalTop}
         handleClose={handleModalTop}
-        dataHistory={dataHistory}
+        dataHistory={dataTop}
       />
     </>
   );
