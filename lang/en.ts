@@ -52,6 +52,6 @@ export default {
     "Cancel Successful": "Guhagarika vyagenze neza.",
     "Rank": "URUONDE IZAHABU",
     "No.": "No.",
-    "Phone": "Inomera Ya Terefone",
+    "Phone": "Terefone",
     "Gold": "Izahabu"
 }
