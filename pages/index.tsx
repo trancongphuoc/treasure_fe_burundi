@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { Box } from "@mui/material";
+import ringme from "ringme-library";
 import HomeFooter from "../components/Home/HomeFooter";
 import HomeHeader from "../components/Home/HomeHeader";
 import HexTileLayout from "../components/Home/HexTileLayout"
@@ -66,6 +67,7 @@ const Home: NextPage = () => {
   const [dataSuccessShake, setDataSuccessShake] = useState<IDataSuccessShake>();
   const [isChargeTurn, setIsChargeTurn] = useState<boolean>(false);
   const [isOnShake, setIsOnShake] = useState<boolean>(false);
+  const [backSuperApp, setBackSuperApp] = useState<boolean>(false);
 
   const [muteAudioBg, setMuteAudioBg] = useState<boolean>(false);
   const trans = useTrans();
@@ -75,23 +77,33 @@ const Home: NextPage = () => {
   
   const videoRef = useRef<any>(null);
   const audioRef = useRef<any>(null);
-  
-  useEffect(() => {
-    // ShakeDetectorService.onShake(() => {
-    //   alert("shake")
-    //   if(statusShake === TStatusShake.inProgress) {
-    //     return;
-    //   }
-    //   // alert("The chest is now open! 🎉");
-    //   if (audioRef && audioRef?.current) {
-    //     audioRef.current.load();
-    //   }
 
-    //   openChest(userInfo);
-    // });
+
+  const isWebView = () => {
+		const navigator = window.navigator;
+		const userAgent = navigator.userAgent;
+		const normalizedUserAgent = userAgent.toLowerCase();
+		const standalone = (navigator as any).standalone;
+
+		const isIos = /ip(ad|hone|od)/.test(normalizedUserAgent) || navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+		const isAndroid = /android/.test(normalizedUserAgent);
+		const isSafari = /safari/.test(normalizedUserAgent);
+		const isWV = (isAndroid && /; wv\)/.test(normalizedUserAgent)) || (isIos && !standalone && !isSafari);
+
+		const osText = isIos ? 'iOS' : isAndroid ? 'Android' : 'Other';
+		const webviewText = isWV ? 'Yes' : 'No';
+    console.log(`OS: ${osText}, Is WebView: ${webviewText}`);
+    return isWV;
+  }
+
+  useEffect(() => {
+    // Kiểm tra xem có phải WebView không
     if (router.isReady) {
-      if (router.query?.token) {
-        axios.post('api/auth/verify_natcom', { token: router.query?.token }, {
+      if (isWebView()) {
+        setBackSuperApp(true);
+        let data = ringme.getUserInfo();
+        console.log(data);
+        axios.post('api/auth/verify_supper_app', { token: data.token, msisdn: data.userId }, {
           baseURL: process.env.NEXT_PUBLIC_API_URL || window.location.origin,
           timeout: 60000, // 1 phút
           paramsSerializer: (params) =>
@@ -490,7 +502,7 @@ const Home: NextPage = () => {
             src={"/images/image-name.png"}
             alt={"/images/image-name.png"}
           /> */}
-          <HomeHeader phoneNumber={userInfo?.phone || phoneNumber} totalStar={userInfo?.totalStar || 0} muteAudioBackground={onMute} />
+          <HomeHeader backSuperApp={backSuperApp} phoneNumber={userInfo?.phone || phoneNumber} totalStar={userInfo?.totalStar || 0} muteAudioBackground={onMute} />
           <HexTileLayout />
           <HomeFooter
             audioRef={audioRef}

@@ -12,11 +12,13 @@ import useTrans from "../../lang/useTrans";
 import { StorageKey } from "../../constants";
 import { log } from "console";
 import ModalTop from "../Modal/ModalTop";
+import ringme from 'ringme-library';
 
 interface IHomeHeaderProps {
   totalStar?: number;
   muteAudioBackground: () => void;
-  phoneNumber?: string
+  phoneNumber?: string;
+  backSuperApp?: boolean
 }
 const data = [
   {
@@ -29,7 +31,7 @@ const data = [
   },
 ];
 const HomeHeader: React.FC<IHomeHeaderProps> = (props) => {
-  const { totalStar, muteAudioBackground, phoneNumber } = props;
+  const { totalStar, muteAudioBackground, phoneNumber, backSuperApp } = props;
 
   const [isOpenModalInfo, setIsOpenModalInfo] = useState<boolean>(false);
   const [isOpenModalHistory, setIsOpenModalHistory] = useState<boolean>(false);
@@ -84,8 +86,13 @@ const HomeHeader: React.FC<IHomeHeaderProps> = (props) => {
 
   const logout = () => {
     localStorage.removeItem(StorageKey.accessToken);
-    AuthService.logout();
-    window.location.reload();
+    if(backSuperApp) {
+      ringme.backMiniApp();
+    } else {
+      AuthService.logout();
+      window.location.reload();
+    }
+
   }
 
   return (
@@ -99,16 +106,16 @@ const HomeHeader: React.FC<IHomeHeaderProps> = (props) => {
       >
         <Box display={"flex"} alignItems={"center"} gap={"8px"}>
           <NormalButton
-            // sx={{
-            //   ".MuiButton-startIcon": { marginRight: "4px" },
-            // }}
+            sx={{ minWidth: "35px"}}
+            
             onClick={logout}
-            startIcon={<XMarkIcon />}
+            // startIcon={<XMarkIcon />}
           >
+            <XMarkIcon />
             {/* {trans.Logout} */}
           </NormalButton>
           <NormalButton
-            sx={{ minWidth: "88px", px: "8px" }}
+            sx={{ minWidth: "70px", px: "8px" }}
             startIcon={
               <img
                 src="/images/coin.svg"
