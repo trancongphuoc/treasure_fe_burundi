@@ -13,7 +13,7 @@ import * as React from "react";
 import { useEffect, useState, useRef } from "react";
 import ModalCancelActive from "../components/Modal/ModalCancelActive";
 import { useRouter } from "next/router";
-import { AuthService, MpsService, PlayService, UserInfoResponse } from "../services/service";
+import { AuthService, MpsService, PlayService, UserInfoResponse, SupperApp, isWebView } from "../services/service";
 import { OtpType, StorageKey, TStatusShake } from "../constants";
 import axios, { AxiosRequestConfig } from "axios";
 import { serviceOptions } from "../services/serviceOptions";
@@ -74,27 +74,27 @@ const Home: NextPage = () => {
   const handleStatusShake = (status: TStatusShake) => {
     setStatusShake(status);
   };
-  
+
   const videoRef = useRef<any>(null);
   const audioRef = useRef<any>(null);
 
 
-  const isWebView = () => {
-		const navigator = window.navigator;
-		const userAgent = navigator.userAgent;
-		const normalizedUserAgent = userAgent.toLowerCase();
-		const standalone = (navigator as any).standalone;
+  // const isWebView = () => {
+  // 	const navigator = window.navigator;
+  // 	const userAgent = navigator.userAgent;
+  // 	const normalizedUserAgent = userAgent.toLowerCase();
+  // 	const standalone = (navigator as any).standalone;
 
-		const isIos = /ip(ad|hone|od)/.test(normalizedUserAgent) || navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
-		const isAndroid = /android/.test(normalizedUserAgent);
-		const isSafari = /safari/.test(normalizedUserAgent);
-		const isWV = (isAndroid && /; wv\)/.test(normalizedUserAgent)) || (isIos && !standalone && !isSafari);
+  // 	const isIos = /ip(ad|hone|od)/.test(normalizedUserAgent) || navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+  // 	const isAndroid = /android/.test(normalizedUserAgent);
+  // 	const isSafari = /safari/.test(normalizedUserAgent);
+  // 	const isWV = (isAndroid && /; wv\)/.test(normalizedUserAgent)) || (isIos && !standalone && !isSafari);
 
-		const osText = isIos ? 'iOS' : isAndroid ? 'Android' : 'Other';
-		const webviewText = isWV ? 'Yes' : 'No';
-    console.log(`OS: ${osText}, Is WebView: ${webviewText}`);
-    return isWV;
-  }
+  // 	const osText = isIos ? 'iOS' : isAndroid ? 'Android' : 'Other';
+  // 	const webviewText = isWV ? 'Yes' : 'No';
+  //   console.log(`OS: ${osText}, Is WebView: ${webviewText}`);
+  //   return isWV;
+  // }
 
   useEffect(() => {
     // Kiểm tra xem có phải WebView không
@@ -228,7 +228,7 @@ const Home: NextPage = () => {
       return
     }
 
-    if(statusShake === TStatusShake.inProgress) {
+    if (statusShake === TStatusShake.inProgress) {
       return;
     }
 
@@ -290,7 +290,7 @@ const Home: NextPage = () => {
       if (data?.type) {
         // setOtpType(data?.type);
         // setOpenOtp(true);
-        if(data?.res.status != "OK") {
+        if (data?.res.status != "OK") {
           setIsModalEnoughMoney(true);
         } else {
           setRefreshUserInfo(true)
@@ -417,21 +417,34 @@ const Home: NextPage = () => {
   }
 
   const handleChargePlay = () => {
-    MpsService.mpsCharge({
-      body: {
-        cate: 'BUY3'
-      }
-    })
-      .then((res) => {
-        if (res.status === 'OK') {
-          setRefreshUserInfo(true)
-          setIsModalCharge(false)
+    if (isWebView()) {
+      SupperApp.spGetChargeUrl().then((res) => {
+        if(res.code == "200") {
+          window.location.href = res.data;
         } else {
           setIsModalCharge(false)
           setIsModalEnoughMoney(true);
         }
+      }).catch((err) => {
+      });
+    } else {
+      MpsService.mpsCharge({
+        body: {
+          cate: 'BUY3'
+        }
       })
-      .catch()
+        .then((res) => {
+          if (res.status === 'OK') {
+            setRefreshUserInfo(true)
+            setIsModalCharge(false)
+          } else {
+            setIsModalCharge(false)
+            setIsModalEnoughMoney(true);
+          }
+        })
+        .catch()
+    }
+
   }
 
   const onChangePlayTurn = () => {

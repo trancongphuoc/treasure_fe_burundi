@@ -17,7 +17,10 @@ export const api = {
   play_history: "api/lucky/history",
   play_top: "api/lucky/top",
   play_share_plus: "api/lucky/share_plus",
-  play_get_all_gift: "api/lucky/get_all_gift"
+  play_get_all_gift: "api/lucky/get_all_gift",
+  sp_get_register_url: "api/sp_app/get_payment_register_url",
+  sp_get_charge_url: "api/sp_app/get_payment_charge_url",
+  sp_cancel: "api/sp_app/cancel",
 };
 export const OtpType = {
   UserVerify: "user_verify",

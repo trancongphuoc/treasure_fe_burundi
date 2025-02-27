@@ -3,7 +3,7 @@ import React from "react";
 import { DialogProps } from "@mui/material/Dialog";
 import { Box, DialogContent, Typography } from "@mui/material";
 import PrimaryButton from "../Button/PrimaryButton";
-import { MpsService } from "../../services/service";
+import { MpsService, isWebView, SupperApp } from "../../services/service";
 import { OtpType } from "../../constants";
 import useTrans from "../../lang/useTrans"
 
@@ -16,13 +16,27 @@ const ModalActive: React.FC<IModalActiveProps> = (props) => {
   const trans = useTrans();
 
   const onSubmitRegister = () => {
-    MpsService.mpsRegister().then((res) => {
-      handleClose({
-        type:OtpType.MpsRegisterVerify,
-        res: res
-      })
-    }).catch((err) => {
-    });
+    if (isWebView()) {
+      SupperApp.spGetRegisterUrl().then((res) => {
+        if(res.code == "200") {
+          window.location.href = res.data;
+        } else {
+          handleClose({
+            type: OtpType.MpsRegisterVerify,
+            res: {status: "FAILED", message: res.message}
+          })
+        }
+      }).catch((err) => {
+      });
+    } else {
+      MpsService.mpsRegister().then((res) => {
+        handleClose({
+          type: OtpType.MpsRegisterVerify,
+          res: res
+        })
+      }).catch((err) => {
+      });
+    }
   };
   return (
     <ModalBase {...dialogProps} handleClose={handleClose}>
@@ -57,7 +71,7 @@ const ModalActive: React.FC<IModalActiveProps> = (props) => {
               lineHeight={"19px"}
               color={"#502A00"}
             >
-              {trans["Fee"]}: 
+              {trans["Fee"]}:
             </Typography>
             <Typography
               fontSize={"16px"}

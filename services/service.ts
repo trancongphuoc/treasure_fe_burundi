@@ -251,6 +251,80 @@ export class MpsService {
     });
   }
 }
+
+export class SupperApp {
+    /**
+   * register
+   */
+    static spGetRegisterUrl(
+      params: {} = {} as any,
+      options: IRequestOptions = {}
+    ): Promise<SpResponse> {
+      return new Promise((resolve, reject) => {
+        let url = basePath + api.sp_get_register_url;
+  
+        const configs: IRequestConfig = getConfigs(
+          "post",
+          "application/json",
+          url,
+          options
+        );
+  
+        let data = null;
+  
+        configs.data = data;
+        axios(configs, resolve, reject);
+      });
+    }
+
+    /**
+   * charge
+   */
+    static spGetChargeUrl(
+      params: {} = {} as any,
+      options: IRequestOptions = {}
+    ): Promise<SpResponse> {
+      return new Promise((resolve, reject) => {
+        let url = basePath + api.sp_get_charge_url;
+  
+        const configs: IRequestConfig = getConfigs(
+          "post",
+          "application/json",
+          url,
+          options
+        );
+  
+        let data = null;
+  
+        configs.data = data;
+        axios(configs, resolve, reject);
+      });
+    }
+
+    /**
+   * cancel
+   */
+    static spCancel(
+      params: {} = {} as any,
+      options: IRequestOptions = {}
+    ): Promise<BaseResponse> {
+      return new Promise((resolve, reject) => {
+        let url = basePath + api.sp_cancel;
+  
+        const configs: IRequestConfig = getConfigs(
+          "post",
+          "application/json",
+          url,
+          options
+        );
+  
+        let data = null;
+  
+        configs.data = data;
+        axios(configs, resolve, reject);
+      });
+    }
+}
 export class PlayService {
   /**
    * play_run
@@ -430,6 +504,13 @@ export type BaseResponse = {
   status: string;
   message: string;
 };
+
+export type SpResponse = {
+  code: string;
+  message: string;
+  data: string;
+};
+
 export type BaseRequestOtp = {
   otp: string;
 };
@@ -467,3 +548,20 @@ export type PlayRunResponse = BaseResponse & {
 export type Charge = {
   cate: string;
 };
+
+export const isWebView = () => {
+  const navigator = window.navigator;
+  const userAgent = navigator.userAgent;
+  const normalizedUserAgent = userAgent.toLowerCase();
+  const standalone = (navigator as any).standalone;
+
+  const isIos = /ip(ad|hone|od)/.test(normalizedUserAgent) || navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+  const isAndroid = /android/.test(normalizedUserAgent);
+  const isSafari = /safari/.test(normalizedUserAgent);
+  const isWV = (isAndroid && /; wv\)/.test(normalizedUserAgent)) || (isIos && !standalone && !isSafari);
+
+  const osText = isIos ? 'iOS' : isAndroid ? 'Android' : 'Other';
+  const webviewText = isWV ? 'Yes' : 'No';
+  console.log(`OS: ${osText}, Is WebView: ${webviewText}`);
+  return isWV;
+}
