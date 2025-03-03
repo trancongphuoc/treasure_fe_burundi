@@ -21,7 +21,7 @@ import { ShakeDetectorService } from "../services/shakeDetector";
 import { getImageSuccessModal } from "../utils";
 import ModalPhoneNumber from "../components/Modal/ModalPhoneNumber";
 import useTrans from "../lang/useTrans";
-import { vi } from "date-fns/locale";
+import { da, vi } from "date-fns/locale";
 const Shake = require('shake.js');
 const Qs = require("qs");
 
@@ -102,7 +102,9 @@ const Home: NextPage = () => {
       if (isWebView()) {
         setBackSuperApp(true);
         let data = ringme.getUserInfo();
-        console.log(data);
+        alert(data)
+
+        if(!data) return;
         axios.post('api/auth/verify_supper_app', { token: data.token, msisdn: data.userId }, {
           baseURL: process.env.NEXT_PUBLIC_API_URL || window.location.origin,
           timeout: 60000, // 1 phút
