@@ -101,36 +101,46 @@ const Home: NextPage = () => {
     if (router.isReady) {
       if (isWebView()) {
         setBackSuperApp(true);
-        let data = ringme.getUserInfo();
-        alert(data)
+        // let data = await ringme.getUserInfo();
+        // alert(data)
 
-        if(!data) return;
-        axios.post('api/auth/verify_supper_app', { token: data.token, msisdn: data.userId }, {
-          baseURL: process.env.NEXT_PUBLIC_API_URL || window.location.origin,
-          timeout: 60000, // 1 phút
-          paramsSerializer: (params) =>
-            Qs.stringify(params, { arrayFormat: 'repeat' }),
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-          }
-        })
-          .then((res) => {
-            localStorage.setItem(StorageKey.accessToken, router.query?.token as string);
-            const axiosConfig: AxiosRequestConfig = {
+        ringme.getUserInfo()
+          .then(data => {
+            alert(JSON.stringify(data, null, 2));
+
+            if (!data) return;
+            axios.post('api/auth/verify_supper_app', { token: data.token, msisdn: data.userId }, {
               baseURL: process.env.NEXT_PUBLIC_API_URL || window.location.origin,
               timeout: 60000, // 1 phút
               paramsSerializer: (params) =>
-                Qs.stringify(params, { arrayFormat: "repeat" }),
+                Qs.stringify(params, { arrayFormat: 'repeat' }),
               headers: {
-                Authorization: `Bearer ${res.data?.accessToken}`,
-                "Access-Control-Allow-Origin": "*"
+                'Access-Control-Allow-Origin': '*',
               }
-            };
-            serviceOptions.axios = axios.create(axiosConfig);
-            setRefreshUserInfo(true)
-          }).catch(err => {
-            setOpenPhoneNumber(true)
+            })
+              .then((res) => {
+                localStorage.setItem(StorageKey.accessToken, router.query?.token as string);
+                const axiosConfig: AxiosRequestConfig = {
+                  baseURL: process.env.NEXT_PUBLIC_API_URL || window.location.origin,
+                  timeout: 60000, // 1 phút
+                  paramsSerializer: (params) =>
+                    Qs.stringify(params, { arrayFormat: "repeat" }),
+                  headers: {
+                    Authorization: `Bearer ${res.data?.accessToken}`,
+                    "Access-Control-Allow-Origin": "*"
+                  }
+                };
+                serviceOptions.axios = axios.create(axiosConfig);
+                setRefreshUserInfo(true)
+              }).catch(err => {
+                setOpenPhoneNumber(true)
+              });
+          })
+          .catch(error => {
+            alert("Lỗi khi lấy dữ liệu người dùng: " + JSON.stringify(error));
           });
+
+
       } else {
         if (serviceOptions.axios) {
           AuthService.userInfo().then((res) => {
@@ -421,7 +431,7 @@ const Home: NextPage = () => {
   const handleChargePlay = () => {
     if (isWebView()) {
       SupperApp.spGetChargeUrl().then((res) => {
-        if(res.code == "200") {
+        if (res.code == "200") {
           window.location.href = res.data;
         } else {
           setIsModalCharge(false)
