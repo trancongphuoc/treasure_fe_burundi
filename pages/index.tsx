@@ -100,16 +100,19 @@ const Home: NextPage = () => {
     // Kiểm tra xem có phải WebView không
     if (router.isReady) {
       if (isWebView()) {
+        setOpenPhoneNumber(false)
         setBackSuperApp(true);
         // let data = await ringme.getUserInfo();
         // alert(data)
 
         ringme.getUserInfo()
           .then(data => {
-            alert(JSON.stringify(data, null, 2));
+            alert(data);
 
-            if (!data) return;
-            axios.post('api/auth/verify_supper_app', { token: data.token, msisdn: data.userId }, {
+            let dataJson = typeof data === "string" ? JSON.parse(data) : data;
+
+            if (!dataJson) return;
+            axios.post('api/auth/verify_supper_app', { token: dataJson.token, msisdn: dataJson.userId }, {
               baseURL: process.env.NEXT_PUBLIC_API_URL || window.location.origin,
               timeout: 60000, // 1 phút
               paramsSerializer: (params) =>
