@@ -60,6 +60,33 @@ export class AuthService {
       axios(configs, resolve, reject);
     });
   }
+
+  /**
+   * verify_otp
+   */
+  static verifySupperApp(
+    params: {
+      /** requestBody */
+      body?: AuthVerifySupperApp;
+    } = {} as any,
+    options: IRequestOptions = {}
+  ): Promise<AuthVerifyOtpResponse> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + api.verify_otp;
+
+      const configs: IRequestConfig = getConfigs(
+        "post",
+        "application/json",
+        url,
+        options
+      );
+
+      let data = params.body;
+
+      configs.data = data;
+      axios(configs, resolve, reject);
+    });
+  }
   /**
    * verify_natcom
    */
@@ -519,6 +546,10 @@ export type AuthSendOtp = {
 };
 export type AuthVerifyOtp = BaseRequestOtp & {
   phone: string;
+};
+export type AuthVerifySupperApp = {
+  msisdn: string;
+  token: string;
 };
 export type AuthVerifyNatcom = BaseRequestOtp & {
   token: string;

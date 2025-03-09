@@ -3,6 +3,7 @@ export const SITE_SLOGAN = "Site slogan...................";
 export const api = {
   send_otp: "api/auth/send_otp",
   verify_otp: "api/auth/verify_otp",
+  verify_supper_app: "api/auth/verify_supper_app",
   verify_natcom: "api/auth/verify_natcom",
   logout: "api/logout",
   user_info: "api/user/info",

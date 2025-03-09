@@ -112,32 +112,29 @@ const Home: NextPage = () => {
             let dataJson = typeof data === "string" ? JSON.parse(data) : data;
 
             if (!dataJson) return;
-            axios.post('api/auth/verify_supper_app', { token: dataJson.token, msisdn: dataJson.userId }, {
-              baseURL: process.env.NEXT_PUBLIC_API_URL || window.location.origin,
-              timeout: 60000, // 1 phút
-              paramsSerializer: (params) =>
-                Qs.stringify(params, { arrayFormat: 'repeat' }),
-              headers: {
-                'Access-Control-Allow-Origin': '*',
+            AuthService.verifySupperApp({
+              body: {
+                msisdn: dataJson.userId,
+                token: dataJson.token
               }
-            })
-              .then((res) => {
-                localStorage.setItem(StorageKey.accessToken, router.query?.token as string);
-                const axiosConfig: AxiosRequestConfig = {
-                  baseURL: process.env.NEXT_PUBLIC_API_URL || window.location.origin,
-                  timeout: 60000, // 1 phút
-                  paramsSerializer: (params) =>
-                    Qs.stringify(params, { arrayFormat: "repeat" }),
-                  headers: {
-                    Authorization: `Bearer ${res.data?.accessToken}`,
-                    "Access-Control-Allow-Origin": "*"
-                  }
-                };
-                serviceOptions.axios = axios.create(axiosConfig);
-                setRefreshUserInfo(true)
-              }).catch(err => {
-                setOpenPhoneNumber(true)
-              });
+            }).then((res) => {
+              localStorage.setItem(StorageKey.accessToken, res.accessToken);
+              const axiosConfig: AxiosRequestConfig = {
+                baseURL: process.env.NEXT_PUBLIC_API_URL || window.location.origin,
+                timeout: 60000, // 1 phút
+                paramsSerializer: (params) =>
+                  Qs.stringify(params, { arrayFormat: "repeat" }),
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem(StorageKey.accessToken)}`,
+                  "Access-Control-Allow-Origin": "*"
+                }
+              };
+              serviceOptions.axios = axios.create(axiosConfig);
+              setRefreshUserInfo(true)
+              window.location.reload()
+            }).catch(err => {
+              setOpenPhoneNumber(true)
+            });
           })
           .catch(error => {
             alert("Lỗi khi lấy dữ liệu người dùng: " + JSON.stringify(error));
