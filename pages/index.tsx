@@ -99,75 +99,61 @@ const Home: NextPage = () => {
   useEffect(() => {
     // Kiểm tra xem có phải WebView không
     if (router.isReady) {
-      if (isWebView()) {
+      if (isWebView() && !localStorage.getItem(StorageKey.accessToken)) {
         setOpenPhoneNumber(false)
         setBackSuperApp(true);
         // let data = await ringme.getUserInfo();
         // alert(data)
 
-        ringme.getUserInfo()
-          .then(data => {
-            alert(data);
+        ringme.getUserInfo().then(data => {
+          let dataJson = typeof data === "string" ? JSON.parse(data) : data;
 
-            let dataJson = typeof data === "string" ? JSON.parse(data) : data;
+          if (!dataJson) return;
 
-            if (!dataJson) return;
+          let body = {
+            msisdn: dataJson.userId,
+            token: dataJson.token
+          }
 
-            if (serviceOptions.axios) {
-              AuthService.verifySupperApp({
-                body: {
-                  msisdn: dataJson.userId,
-                  token: dataJson.token
-                }
-              }).then((res) => {
-                localStorage.setItem(StorageKey.accessToken, res.accessToken);
-                const axiosConfig: AxiosRequestConfig = {
-                  baseURL: process.env.NEXT_PUBLIC_API_URL || window.location.origin,
-                  timeout: 60000, // 1 phút
-                  paramsSerializer: (params) =>
-                    Qs.stringify(params, { arrayFormat: "repeat" }),
-                  headers: {
-                    Authorization: `Bearer ${localStorage.getItem(StorageKey.accessToken)}`,
-                    "Access-Control-Allow-Origin": "*"
-                  }
-                };
-                serviceOptions.axios = axios.create(axiosConfig);
-                setRefreshUserInfo(true)
-                window.location.reload()
-              }).catch(err => {
-                setOpenPhoneNumber(true)
-              });
-            } else {
-              axios.post('api/auth/verify_supper_app', null, {
+          if (serviceOptions.axios) {
+            AuthService.verifySupperApp({
+              body: body
+            }).then((res) => {
+              localStorage.setItem(StorageKey.accessToken, res.accessToken);
+              setRefreshUserInfo(true)
+              window.location.reload()
+            }).catch(err => {
+              setOpenPhoneNumber(true)
+            });
+          } else {
+            axios.post('api/auth/verify_supper_app', body, {
+              baseURL: process.env.NEXT_PUBLIC_API_URL || window.location.origin,
+              timeout: 60000, // 1 phút
+              paramsSerializer: (params) =>
+                Qs.stringify(params, { arrayFormat: 'repeat' }),
+              headers: {}
+            }).then((res) => {
+              localStorage.setItem(StorageKey.accessToken, res.data?.accessToken);
+              const axiosConfig: AxiosRequestConfig = {
                 baseURL: process.env.NEXT_PUBLIC_API_URL || window.location.origin,
                 timeout: 60000, // 1 phút
                 paramsSerializer: (params) =>
-                  Qs.stringify(params, { arrayFormat: 'repeat' }),
-                headers: {}
-              }).then((res) => {
-                localStorage.setItem(StorageKey.accessToken, res.data?.accessToken);
-                const axiosConfig: AxiosRequestConfig = {
-                  baseURL: process.env.NEXT_PUBLIC_API_URL || window.location.origin,
-                  timeout: 60000, // 1 phút
-                  paramsSerializer: (params) =>
-                    Qs.stringify(params, { arrayFormat: "repeat" }),
-                  headers: {
-                    Authorization: `Bearer ${localStorage.getItem(StorageKey.accessToken)}`,
-                    "Access-Control-Allow-Origin": "*"
-                  }
-                };
-                serviceOptions.axios = axios.create(axiosConfig);
-                setRefreshUserInfo(true)
-                window.location.reload()
-              }).catch(err => {
-                setOpenPhoneNumber(true)
-              });
-            }
-          }).catch(error => {
-            alert("Lỗi khi lấy dữ liệu người dùng: " + JSON.stringify(error));
-          });
-
-
+                  Qs.stringify(params, { arrayFormat: "repeat" }),
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem(StorageKey.accessToken)}`,
+                  "Access-Control-Allow-Origin": "*"
+                }
+              };
+              serviceOptions.axios = axios.create(axiosConfig);
+              setRefreshUserInfo(true)
+              window.location.reload()
+            }).catch(err => {
+              setOpenPhoneNumber(true)
+            });
+          }
+        }).catch(error => {
+          alert("Lỗi khi lấy dữ liệu người dùng: " + JSON.stringify(error));
+        });
       } else {
         if (serviceOptions.axios) {
           AuthService.userInfo().then((res) => {
@@ -183,10 +169,13 @@ const Home: NextPage = () => {
                 setIsModalShakeSuccess(true)
               }, 1500);
             }
-          })
-            .catch(err => {
-              setOpenPhoneNumber(true)
-            });
+          }).catch(err => {
+            if(localStorage.getItem(StorageKey.accessToken)) {
+              localStorage.removeItem(StorageKey.accessToken);
+              window.location.reload();
+            }
+            setOpenPhoneNumber(true)
+          });
         } else {
           axios.post('api/user/info', null, {
             baseURL: process.env.NEXT_PUBLIC_API_URL || window.location.origin,
@@ -197,23 +186,26 @@ const Home: NextPage = () => {
               Authorization: `Bearer ${localStorage.getItem(StorageKey.accessToken)}`,
               'Access-Control-Allow-Origin': '*',
             }
-          })
-            .then((res) => {
-              setUserInfo(res.data);
-              if (res?.data?.isWin) {
-                setStatusShake(TStatusShake.result);
-                setDataSuccessShake({
-                  title: trans.Congratulations,
-                  description: trans["You are the player..."],
-                  image: "/images/money-default.svg"
-                });
-                setTimeout(() => {
-                  setIsModalShakeSuccess(true)
-                }, 1500);
-              }
-            }).catch(err => {
-              setOpenPhoneNumber(true)
-            });
+          }).then((res) => {
+            setUserInfo(res.data);
+            if (res?.data?.isWin) {
+              setStatusShake(TStatusShake.result);
+              setDataSuccessShake({
+                title: trans.Congratulations,
+                description: trans["You are the player..."],
+                image: "/images/money-default.svg"
+              });
+              setTimeout(() => {
+                setIsModalShakeSuccess(true)
+              }, 1500);
+            }
+          }).catch(err => {
+            if(localStorage.getItem(StorageKey.accessToken)) {
+              localStorage.removeItem(StorageKey.accessToken);
+              window.location.reload();
+            }
+            setOpenPhoneNumber(true)
+          });
         }
       }
     }
