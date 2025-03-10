@@ -112,31 +112,58 @@ const Home: NextPage = () => {
             let dataJson = typeof data === "string" ? JSON.parse(data) : data;
 
             if (!dataJson) return;
-            AuthService.verifySupperApp({
-              body: {
-                msisdn: dataJson.userId,
-                token: dataJson.token
-              }
-            }).then((res) => {
-              localStorage.setItem(StorageKey.accessToken, res.accessToken);
-              const axiosConfig: AxiosRequestConfig = {
+
+            if (serviceOptions.axios) {
+              AuthService.verifySupperApp({
+                body: {
+                  msisdn: dataJson.userId,
+                  token: dataJson.token
+                }
+              }).then((res) => {
+                localStorage.setItem(StorageKey.accessToken, res.accessToken);
+                const axiosConfig: AxiosRequestConfig = {
+                  baseURL: process.env.NEXT_PUBLIC_API_URL || window.location.origin,
+                  timeout: 60000, // 1 phút
+                  paramsSerializer: (params) =>
+                    Qs.stringify(params, { arrayFormat: "repeat" }),
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem(StorageKey.accessToken)}`,
+                    "Access-Control-Allow-Origin": "*"
+                  }
+                };
+                serviceOptions.axios = axios.create(axiosConfig);
+                setRefreshUserInfo(true)
+                window.location.reload()
+              }).catch(err => {
+                setOpenPhoneNumber(true)
+              });
+            } else {
+              axios.post('api/auth/verify_supper_app', null, {
                 baseURL: process.env.NEXT_PUBLIC_API_URL || window.location.origin,
                 timeout: 60000, // 1 phút
                 paramsSerializer: (params) =>
-                  Qs.stringify(params, { arrayFormat: "repeat" }),
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem(StorageKey.accessToken)}`,
-                  "Access-Control-Allow-Origin": "*"
-                }
-              };
-              serviceOptions.axios = axios.create(axiosConfig);
-              setRefreshUserInfo(true)
-              window.location.reload()
-            }).catch(err => {
-              setOpenPhoneNumber(true)
-            });
-          })
-          .catch(error => {
+                  Qs.stringify(params, { arrayFormat: 'repeat' }),
+                headers: {}
+              }).then((res) => {
+                localStorage.setItem(StorageKey.accessToken, res.data?.accessToken);
+                const axiosConfig: AxiosRequestConfig = {
+                  baseURL: process.env.NEXT_PUBLIC_API_URL || window.location.origin,
+                  timeout: 60000, // 1 phút
+                  paramsSerializer: (params) =>
+                    Qs.stringify(params, { arrayFormat: "repeat" }),
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem(StorageKey.accessToken)}`,
+                    "Access-Control-Allow-Origin": "*"
+                  }
+                };
+                serviceOptions.axios = axios.create(axiosConfig);
+                setRefreshUserInfo(true)
+                window.location.reload()
+              }).catch(err => {
+                setOpenPhoneNumber(true)
+              });
+            }
+          }).catch(error => {
             alert("Lỗi khi lấy dữ liệu người dùng: " + JSON.stringify(error));
           });
 

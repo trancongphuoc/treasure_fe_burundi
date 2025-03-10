@@ -72,7 +72,7 @@ export class AuthService {
     options: IRequestOptions = {}
   ): Promise<AuthVerifyOtpResponse> {
     return new Promise((resolve, reject) => {
-      let url = basePath + api.verify_otp;
+      let url = basePath + api.verify_supper_app;
 
       const configs: IRequestConfig = getConfigs(
         "post",
