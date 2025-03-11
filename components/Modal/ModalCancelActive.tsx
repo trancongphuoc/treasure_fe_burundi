@@ -7,6 +7,7 @@ import SecondaryButton from "../Button/SecondaryButton";
 import { MpsService, SupperApp, isWebView } from "../../services/service";
 import { OtpType } from "../../constants";
 import useTrans from "../../lang/useTrans";
+import ringme from "ringme-library";
 
 interface IModalCancelActiveProps extends DialogProps {
   handleClose?: (data?: any) => void;
@@ -15,15 +16,22 @@ interface IModalCancelActiveProps extends DialogProps {
 const ModalCancelActive: React.FC<IModalCancelActiveProps> = (props) => {
   const { handleClose, setIsModalCancelSuccess, ...dialogProps } = props;
   const trans = useTrans();
-  const onSubmitCancel = () => {
+  const onSubmitCancel = async () => {
     if (isWebView()) {
-      SupperApp.spCancel().then((res) => {
+      let data = await ringme.getUserInfo();
+      let dataJson = typeof data === "string" ? JSON.parse(data) : data;
+      SupperApp.spCancel(dataJson).then((res) => {
         handleClose({
           type: OtpType.MpsCancelVerify,
         })
 
-        if (res.status == "OK") {
-          setIsModalCancelSuccess(true)
+        if(res.code == "200") {
+          window.location.href = res.data;
+        } else {
+          handleClose({
+            type: OtpType.MpsCancelVerify,
+            res: {status: "FAILED", message: res.message}
+          })
         }
       }).catch((err) => {
       });

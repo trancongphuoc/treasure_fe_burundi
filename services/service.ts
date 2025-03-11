@@ -284,12 +284,14 @@ export class SupperApp {
    * register
    */
     static spGetRegisterUrl(
-      params: {} = {} as any,
+      params: {token?: string} = {} as any,
       options: IRequestOptions = {}
     ): Promise<SpResponse> {
       return new Promise((resolve, reject) => {
         let url = basePath + api.sp_get_register_url;
-  
+        if (params?.token) {
+          url += `?saToken=${encodeURIComponent(params.token)}`;
+        }
         const configs: IRequestConfig = getConfigs(
           "post",
           "application/json",
@@ -308,12 +310,14 @@ export class SupperApp {
    * charge
    */
     static spGetChargeUrl(
-      params: {} = {} as any,
+      params: {token?: string} = {} as any,
       options: IRequestOptions = {}
     ): Promise<SpResponse> {
       return new Promise((resolve, reject) => {
         let url = basePath + api.sp_get_charge_url;
-  
+        if (params?.token) {
+          url += `?saToken=${encodeURIComponent(params.token)}`;
+        }
         const configs: IRequestConfig = getConfigs(
           "post",
           "application/json",
@@ -332,12 +336,14 @@ export class SupperApp {
    * cancel
    */
     static spCancel(
-      params: {} = {} as any,
+      params: {token?: string} = {} as any,
       options: IRequestOptions = {}
-    ): Promise<BaseResponse> {
+    ): Promise<SpResponse> {
       return new Promise((resolve, reject) => {
         let url = basePath + api.sp_cancel;
-  
+        if (params?.token) {
+          url += `?saToken=${encodeURIComponent(params.token)}`;
+        }
         const configs: IRequestConfig = getConfigs(
           "post",
           "application/json",

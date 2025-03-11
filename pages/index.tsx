@@ -22,6 +22,7 @@ import { getImageSuccessModal } from "../utils";
 import ModalPhoneNumber from "../components/Modal/ModalPhoneNumber";
 import useTrans from "../lang/useTrans";
 import { da, vi } from "date-fns/locale";
+import IframeComponent from "../components/Iframe/IframeComponentProps";
 const Shake = require('shake.js');
 const Qs = require("qs");
 
@@ -70,6 +71,7 @@ const Home: NextPage = () => {
   const [backSuperApp, setBackSuperApp] = useState<boolean>(false);
 
   const [muteAudioBg, setMuteAudioBg] = useState<boolean>(false);
+  const [iframeUrl, setIframeUrl] = useState("");
   const trans = useTrans();
   const handleStatusShake = (status: TStatusShake) => {
     setStatusShake(status);
@@ -447,11 +449,14 @@ const Home: NextPage = () => {
     setIsModalRegisterSuccess(false)
   }
 
-  const handleChargePlay = () => {
+  const handleChargePlay = async () => {
     if (isWebView()) {
-      SupperApp.spGetChargeUrl().then((res) => {
+      let data = await ringme.getUserInfo();
+      let dataJson = typeof data === "string" ? JSON.parse(data) : data;
+      SupperApp.spGetChargeUrl(dataJson).then((res) => {
         if (res.code == "200") {
-          window.location.href = res.data;
+          // window.location.href = res.data;
+          setIframeUrl(res.data);
         } else {
           setIsModalCharge(false)
           setIsModalEnoughMoney(true);
@@ -485,6 +490,10 @@ const Home: NextPage = () => {
 
   const onMute = () => {
     setMuteAudioBg(!muteAudioBg)
+  }
+
+  const closeIframe = () => {
+    setIframeUrl('')
   }
 
   return (
@@ -617,6 +626,8 @@ const Home: NextPage = () => {
             setStatusShake(TStatusShake.done)
           }}
         />
+
+        {iframeUrl && <IframeComponent src={iframeUrl} onClose={closeIframe} />}
       </main>
     </>
   );

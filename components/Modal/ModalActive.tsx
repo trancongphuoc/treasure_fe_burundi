@@ -6,6 +6,7 @@ import PrimaryButton from "../Button/PrimaryButton";
 import { MpsService, isWebView, SupperApp } from "../../services/service";
 import { OtpType } from "../../constants";
 import useTrans from "../../lang/useTrans"
+import ringme from "ringme-library";
 
 interface IModalActiveProps extends DialogProps {
   handleClose?: (data?: any) => void;
@@ -15,9 +16,11 @@ const ModalActive: React.FC<IModalActiveProps> = (props) => {
   const { handleClose, ...dialogProps } = props;
   const trans = useTrans();
 
-  const onSubmitRegister = () => {
+  const onSubmitRegister = async () => {
     if (isWebView()) {
-      SupperApp.spGetRegisterUrl().then((res) => {
+      let data = await ringme.getUserInfo();
+      let dataJson = typeof data === "string" ? JSON.parse(data) : data;
+      SupperApp.spGetRegisterUrl(dataJson).then((res) => {
         if(res.code == "200") {
           window.location.href = res.data;
         } else {
