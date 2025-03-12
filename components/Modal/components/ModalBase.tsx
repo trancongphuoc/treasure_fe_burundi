@@ -70,6 +70,7 @@ const ModalBase: React.FC<IModalBaseProps> = (props) => {
           position: "absolute",
           right: "-8px",
           top: "-8px",
+          zIndex: 9999
         }}
         onClick={() => { handleClose(null) }}
       >
