@@ -11,7 +11,7 @@ interface IframeComponentProps {
 const IframeComponent: React.FC<IframeComponentProps> = ({ src, width = "100%", height = "600px", onClose }) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
-
+  console.log("Iframe URL:", src);
   useEffect(() => {
     const checkIframe = setInterval(() => {
       if (iframeRef.current && !document.body.contains(iframeRef.current)) {

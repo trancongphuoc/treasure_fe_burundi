@@ -11,22 +11,23 @@ import ringme from "ringme-library";
 
 interface IModalCancelActiveProps extends DialogProps {
   handleClose?: (data?: any) => void;
-  setIsModalCancelSuccess?: any
+  setIsModalCancelSuccess?: any;
+  setIframeUrl?: (data?: any) => void;
 }
 const ModalCancelActive: React.FC<IModalCancelActiveProps> = (props) => {
-  const { handleClose, setIsModalCancelSuccess, ...dialogProps } = props;
+  const { handleClose, setIframeUrl, setIsModalCancelSuccess, ...dialogProps } = props;
   const trans = useTrans();
   const onSubmitCancel = async () => {
     if (isWebView()) {
       let data = await ringme.getUserInfo();
       let dataJson = typeof data === "string" ? JSON.parse(data) : data;
       SupperApp.spCancel(dataJson).then((res) => {
-        handleClose({
-          type: OtpType.MpsCancelVerify,
-        })
-
         if(res.code == "200") {
-          window.location.href = res.data;
+          handleClose({
+            type: OtpType.MpsCancelVerify,
+          })
+          setIframeUrl(res.data);
+          // window.location.href = res.data;
         } else {
           handleClose({
             type: OtpType.MpsCancelVerify,

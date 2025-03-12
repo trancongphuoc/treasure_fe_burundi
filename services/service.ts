@@ -577,6 +577,7 @@ export type UserInfoResponse = {
   totalPlay: number;
   totalStar: number;
   premium: boolean;
+  premiumSupperApp: boolean;
   isWin?: boolean;
 };
 export type PlayRunResponse = BaseResponse & {

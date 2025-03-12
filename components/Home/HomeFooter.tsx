@@ -2,14 +2,14 @@ import { Box, Typography } from "@mui/material";
 import PrimaryButton from "../Button/PrimaryButton";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import ModalActive from "../Modal/ModalActive";
-import { UserInfoResponse } from "../../services/service";
+import { isWebView, UserInfoResponse } from "../../services/service";
 import ModalCancelActive from "../Modal/ModalCancelActive";
 import { ImageBase } from "../Images";
 import { RWebShare } from "react-web-share";
 import useTrans from "../../lang/useTrans";
 import ModalDefaultBase from "../../components/Modal/components/ModalDefaultBase";
 import { ShakeDetectorService } from "../../services/shakeDetector";
-import {TStatusShake } from "../../constants";
+import { TStatusShake } from "../../constants";
 
 interface IHomeFooterProps {
   quantityTurn?: number;
@@ -23,10 +23,12 @@ interface IHomeFooterProps {
   setIsOnShake: (data?: any) => void;
   videoRef?: any
   audioRef?: any
+  setIframeUrl?: (data?: any) => void;
+  isWebView?: any
 }
 
 const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
-  const { quantityTurn, openChest, statusShake, handleRegister, handleCancel, userInfo, muteAudioBackground, isOnShake, setIsOnShake, videoRef, audioRef } = props;
+  const { quantityTurn, openChest, statusShake, handleRegister, handleCancel, userInfo, muteAudioBackground, isOnShake, setIsOnShake, videoRef, audioRef, setIframeUrl, isWebView } = props;
   const [isOpenModalActive, setIsOpenModalActive] = useState<boolean>(false);
   const [isOpenModalCancel, setIsOpenModalCancel] = useState<boolean>(false);
   const [isModalCancelSuccess, setIsModalCancelSuccess] = useState<boolean>(false);
@@ -71,7 +73,7 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
   }, [handleOpenChest]);
 
   useEffect(() => {
-    if(!isOnShake) {
+    if (!isOnShake) {
       setIsOnShake(true);
       ShakeDetectorService.onShake(() => {
         handleOpenChestRef.current();
@@ -84,6 +86,16 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
       videoRef.current.load();
     }
   }, [statusShake]);
+
+
+  const isPremium = () => {
+    if (isWebView) {
+      return userInfo?.premiumSupperApp;
+    } else {
+      return userInfo?.premium;
+    }
+  }
+
   const handleShare = () => {
     // Check if the browser supports the Web Share API
     // if (navigator.share) {
@@ -182,16 +194,16 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
           >
             {quantityTurn}
           </Typography>
-          {stringParts[1] !== undefined && 
-          <Typography
-            fontSize={"16px"}
-            fontWeight={700}
-            lineHeight={"19px"}
-            color={"#502A00"}
-            textAlign={"center"}
-          >
-            {stringParts[1]}
-          </Typography>}
+          {stringParts[1] !== undefined &&
+            <Typography
+              fontSize={"16px"}
+              fontWeight={700}
+              lineHeight={"19px"}
+              color={"#502A00"}
+              textAlign={"center"}
+            >
+              {stringParts[1]}
+            </Typography>}
         </Box>
         <Box
           sx={{
@@ -222,13 +234,16 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
           gap={"16px"}
           justifyContent={"center"}
         >
-          {!userInfo?.premium && <PrimaryButton onClick={() => {
-            setIsOpenModalActive(true);
-          }}>{trans.Register}</PrimaryButton>}
+          {!isPremium() &&
+            <PrimaryButton onClick={() => { setIsOpenModalActive(true); }}>
+              {trans.Register}
+            </PrimaryButton>}
 
-          {userInfo?.premium && <PrimaryButton onClick={() => {
-            setIsOpenModalCancel(true);
-          }}>{trans.Cancel}</PrimaryButton>}
+          {isPremium() &&
+            <PrimaryButton onClick={() => { setIsOpenModalCancel(true); }}>
+              {trans.Cancel}
+            </PrimaryButton>}
+
           <RWebShare
             data={{
               text: "Urakaza mu mukino wa Itunga!",
@@ -244,15 +259,16 @@ const HomeFooter: React.FC<IHomeFooterProps> = (props) => {
       <ModalActive
         open={isOpenModalActive}
         handleClose={handleModalActive}
+        setIframeUrl={setIframeUrl}
       />
-      <ModalCancelActive open={isOpenModalCancel} handleClose={handleModalCancel} setIsModalCancelSuccess={setIsModalCancelSuccess}/>
+      <ModalCancelActive setIframeUrl={setIframeUrl} open={isOpenModalCancel} handleClose={handleModalCancel} setIsModalCancelSuccess={setIsModalCancelSuccess} />
       <ModalDefaultBase
-          title={trans["Cancel Successful"]}
-          // description={trans["Cancel Successful"]}
-          textConfirm={trans["Confirm"]}
-          open={isModalCancelSuccess}
-          handleClose={() => setIsModalCancelSuccess(false)}
-          handleConfirm={() => setIsModalCancelSuccess(false)}
+        title={trans["Cancel Successful"]}
+        // description={trans["Cancel Successful"]}
+        textConfirm={trans["Confirm"]}
+        open={isModalCancelSuccess}
+        handleClose={() => setIsModalCancelSuccess(false)}
+        handleConfirm={() => setIsModalCancelSuccess(false)}
       />
     </>
   );

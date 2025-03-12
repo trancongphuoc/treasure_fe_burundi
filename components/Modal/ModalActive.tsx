@@ -10,10 +10,11 @@ import ringme from "ringme-library";
 
 interface IModalActiveProps extends DialogProps {
   handleClose?: (data?: any) => void;
+  setIframeUrl?: (data?: any) => void
 }
 
 const ModalActive: React.FC<IModalActiveProps> = (props) => {
-  const { handleClose, ...dialogProps } = props;
+  const { handleClose, setIframeUrl, ...dialogProps } = props;
   const trans = useTrans();
 
   const onSubmitRegister = async () => {
@@ -22,7 +23,11 @@ const ModalActive: React.FC<IModalActiveProps> = (props) => {
       let dataJson = typeof data === "string" ? JSON.parse(data) : data;
       SupperApp.spGetRegisterUrl(dataJson).then((res) => {
         if(res.code == "200") {
-          window.location.href = res.data;
+          handleClose({
+            type: OtpType.MpsRegisterVerify
+          })
+          setIframeUrl(res.data);
+          // window.location.href = res.data;
         } else {
           handleClose({
             type: OtpType.MpsRegisterVerify,

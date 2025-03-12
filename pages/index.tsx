@@ -23,6 +23,8 @@ import ModalPhoneNumber from "../components/Modal/ModalPhoneNumber";
 import useTrans from "../lang/useTrans";
 import { da, vi } from "date-fns/locale";
 import IframeComponent from "../components/Iframe/IframeComponentProps";
+import ModelShowIframe from "../components/Modal/ModelShowIFrame";
+import { set } from "date-fns";
 const Shake = require('shake.js');
 const Qs = require("qs");
 
@@ -71,6 +73,8 @@ const Home: NextPage = () => {
   const [backSuperApp, setBackSuperApp] = useState<boolean>(false);
 
   const [muteAudioBg, setMuteAudioBg] = useState<boolean>(false);
+  const [isWV, setIsWV] = useState<boolean>(false);
+
   const [iframeUrl, setIframeUrl] = useState("");
   const trans = useTrans();
   const handleStatusShake = (status: TStatusShake) => {
@@ -99,6 +103,7 @@ const Home: NextPage = () => {
   // }
 
   useEffect(() => {
+    setIsWV(isWebView())
     // Kiểm tra xem có phải WebView không
     if (router.isReady) {
       if (isWebView() && !localStorage.getItem(StorageKey.accessToken)) {
@@ -172,7 +177,7 @@ const Home: NextPage = () => {
               }, 1500);
             }
           }).catch(err => {
-            if(localStorage.getItem(StorageKey.accessToken)) {
+            if (localStorage.getItem(StorageKey.accessToken)) {
               localStorage.removeItem(StorageKey.accessToken);
               window.location.reload();
             }
@@ -202,7 +207,7 @@ const Home: NextPage = () => {
               }, 1500);
             }
           }).catch(err => {
-            if(localStorage.getItem(StorageKey.accessToken)) {
+            if (localStorage.getItem(StorageKey.accessToken)) {
               localStorage.removeItem(StorageKey.accessToken);
               window.location.reload();
             }
@@ -249,8 +254,7 @@ const Home: NextPage = () => {
         //     setIsModalShakeSuccess(true)
         //   }, 1500);
         // }
-      })
-        .catch()
+      }).catch()
     }
     setRefreshUserInfo(false)
   }, [refreshUserInfo])
@@ -456,6 +460,8 @@ const Home: NextPage = () => {
       SupperApp.spGetChargeUrl(dataJson).then((res) => {
         if (res.code == "200") {
           // window.location.href = res.data;
+          setIsModalEnoughMoney(false);
+          setIsModalCharge(false);
           setIframeUrl(res.data);
         } else {
           setIsModalCharge(false)
@@ -493,7 +499,12 @@ const Home: NextPage = () => {
   }
 
   const closeIframe = () => {
+    setRefreshUserInfo(true)
     setIframeUrl('')
+  }
+
+  const closeModelDefaultBase = () => {
+    setIsModalEnoughMoney(false)
   }
 
   return (
@@ -569,6 +580,8 @@ const Home: NextPage = () => {
             muteAudioBackground={muteAudioBg}
             isOnShake={isOnShake}
             setIsOnShake={setIsOnShake}
+            setIframeUrl={setIframeUrl}
+            isWebView={isWV}
           />
         </Box>
         <ModalDefaultBase
@@ -577,6 +590,8 @@ const Home: NextPage = () => {
           textConfirm={trans["Buy more"]}
           image={"noMoney"}
           open={isModalEnoughMoney}
+          handleClose={closeModelDefaultBase}
+          handleConfirm={handleChargePlay}
         />
         <ModalDefaultBase
           title={trans["You have ran out of turn"]}
@@ -627,7 +642,7 @@ const Home: NextPage = () => {
           }}
         />
 
-        {iframeUrl && <IframeComponent src={iframeUrl} onClose={closeIframe} />}
+        <ModelShowIframe open={iframeUrl != null && iframeUrl != ""} src={iframeUrl} onClose={closeIframe} />
       </main>
     </>
   );
