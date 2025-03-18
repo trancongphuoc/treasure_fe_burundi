@@ -23,10 +23,10 @@ const ModalActive: React.FC<IModalActiveProps> = (props) => {
       let dataJson = typeof data === "string" ? JSON.parse(data) : data;
       SupperApp.spGetRegisterUrl(dataJson).then((res) => {
         if(res.code == "200") {
+          setIframeUrl(res.data);
           handleClose({
             type: OtpType.MpsRegisterVerify
           })
-          setIframeUrl(res.data);
           // window.location.href = res.data;
         } else {
           handleClose({

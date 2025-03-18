@@ -23,10 +23,10 @@ const ModalCancelActive: React.FC<IModalCancelActiveProps> = (props) => {
       let dataJson = typeof data === "string" ? JSON.parse(data) : data;
       SupperApp.spCancel(dataJson).then((res) => {
         if(res.code == "200") {
+          setIframeUrl(res.data);
           handleClose({
             type: OtpType.MpsCancelVerify,
           })
-          setIframeUrl(res.data);
           // window.location.href = res.data;
         } else {
           handleClose({

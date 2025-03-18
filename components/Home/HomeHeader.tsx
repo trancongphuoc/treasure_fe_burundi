@@ -87,6 +87,7 @@ const HomeHeader: React.FC<IHomeHeaderProps> = (props) => {
   const logout = () => {
     localStorage.removeItem(StorageKey.accessToken);
     if(backSuperApp) {
+      AuthService.logout();
       ringme.backMiniApp();
     } else {
       AuthService.logout();
